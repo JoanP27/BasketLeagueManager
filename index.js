@@ -10,6 +10,8 @@ mongoose.connect('mongodb://127.0.0.1:27017/basketleaguemanager')
     .then(() => console.log('Conectado a MongoDB'))
     .catch(err => console.error('Error al conectar:', err.message));
 
+
+
 const app = express();
 
 app.use(express.json());

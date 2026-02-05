@@ -23,29 +23,27 @@ router.get('/', (req, res) => {
     });
 });
 
-router.get('/:id', (req, res) => {
-    Player.findById(req.params)
-    .then((resultado) => {
-        if(resultado.length <= 0) {
-            res.statusCode = 404;
-            res.send("No existen jugadores con ese nombre.")
-        }
-        else {
-            res.statusCode = 200
-            res.send(resultado);
-        }
-    })
-    .catch(err => {
 
+
+router.get('/find', async(req, res) => {
+    const { name } = req.query
+
+    Player.find({ name: { $regex: name, $options: 'i' }}).then((result) => {
+        return res.status(200).send(result)
+    }).catch(er => {
+        const datos = getErrorMessage(er);
+        res.status(datos.statusCode).send(datos.message)
     });
-});
+})
 
 router.post('/', async (req, res) => {
     // Asignamos los valores de el cuerpo del mensaje a un nuevo Jugador
     const player = new Player({...req.body});
     player.save().then((resp) => {
+
         res.statusCode = 201;
-        res.send(resp)
+        res.status(201).send(resp)
+
     }).catch((er) => {
         // Comprobamos si el error es por fallo en los datos enviados
         if(er.name == 'ValidationError') {
@@ -68,12 +66,10 @@ router.put('/:id', async (req, res) => {
 
     Player.findByIdAndUpdate(req.params.id, req.body, { new: true })
     .then((resp) => {
-
         if(resp == null || resp == undefined) {
             res.statusCode = 404;
             return res.send('Jugador no encontrado')
         }
-
         console.log("resp", resp)
         res.statusCode = 200;
         res.send(resp)
@@ -87,7 +83,7 @@ router.put('/:id', async (req, res) => {
 });
 
 
-
+ 
 
 function getErrorMessage(er) {
     console.log(er.message)
