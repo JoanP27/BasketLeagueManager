@@ -12,11 +12,14 @@ const teamSchema = new mongoose.Schema({
     foundedAt: {
         type: Date
     },
-    roster: [playerDataSchema]
+    roster: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'roster'
+    }]
     
 });
 
-const playerDataSchema = new mongoose.Schema({
+const rosterSchema = new mongoose.Schema({
     player: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'player',
@@ -33,4 +36,4 @@ const playerDataSchema = new mongoose.Schema({
 });
 
 export const Team = mongoose.model("team", teamSchema); 
-export const PlayerData = mongoose.model("playerData", teamSchema); 
+export const Roster = mongoose.model("roster", rosterSchema); 
