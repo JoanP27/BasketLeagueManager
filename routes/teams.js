@@ -7,64 +7,62 @@ import { Match } from '../models/match.js';
 
 export const router = express.Router();
 
-router.get('/', (req, res) => {
-    Team.find()
-    .then((resultado) => {
-        if(resultado.length <= 0) {
-            res.statusCode = 404;
-            res.send("No existen jugadores registrados en el sistema");
+
+router.get('/', async (req, res) => {
+    try{
+        const teams = await Team.find();
+
+        if(teams.length <= 0) {
+            const error = Error()
+            error.name = "EmptyList"
+            throw error;
         }
-        else {
-            res.statusCode = 200;
-            res.send(resultado);
-        }
-    })
-    .catch((err) => {
-        res.statusCode = 500;
-        res.send("Error interno del servidor")
-    });
+
+        res.status(200).send(teams)
+
+    } catch(ex) {
+        const error = getErrorMessage(ex);
+        res.status(error.statusCode).send(error.message);
+    }
 });
 
 router.get('/:id', async (req, res) => {
-
-    try{
-        const id = req.params.id;
-        const team = await Team.findById(id);
-        res.status(200).send(team)
-    }catch(ex)
+    try
     {
+        const { id } = req.params;
+        
+        const team = await Team.findById(id);
+
+        if(!team) {
+            const err = new Error()
+            err.name = "TeamNotFound"
+            throw err;
+        }
+
+        const rostersOfTeam = await Roster.find({_id: {$in: team.roster}})
+
+        team.roster = rostersOfTeam.filter(r => r.active);
+
+        res.status(200).send(team);
+    }
+    catch(ex){
+        console.log(ex.cause)
         const error = getErrorMessage(ex);
         res.status(error.statusCode).send(error.message)
     }
-
-
-    Team.find()
-    .then((resultado) => {
-        if(resultado.length <= 0) {
-            res.statusCode = 404;
-            res.send("No existen jugadores registrados en el sistema");
-        }
-        else {
-            res.statusCode = 200;
-            res.send(resultado);
-        }
-    })
-    .catch((err) => {
-        res.statusCode = 500;
-        res.send("Error interno del servidor")
-    });
-});
-
+})  
 
 router.post('/', async (req, res) => {
-    const team = new Team({... req.body});
-    team.save().then((resp) => {
-        res.statusCode = 201;
-        res.status(201).send(resp)
-    }).catch((er) => {
-        getErrorMessage(er)
-    });
-});
+    try {
+        const team = new Team({... body});
+        const savedTeam = await team.save();
+
+        res.status(201).send(savedTeam);
+    } catch(ex) {
+        const error = getErrorMessage(ex);
+        res.status(error.statusCode).send(error.message)
+    }
+})
 
 router.post('/:id/roster', async (req, res) => {
     try{
@@ -92,14 +90,14 @@ router.post('/:id/roster', async (req, res) => {
 
         if(teamsWithActiveRoster.filter(t => t != team).length > 0)
         {
-            const error = new Error("El jugador ya está activo en el roster de este equipo.");
-            error.name = "AlreadyActive"
+            const error = new Error();
+            error.name = "AlreadyActiveInThisTeam"
             throw error;
         }
 
         if(teamsWithActiveRoster.length > 0)
         {
-            const error = new Error("El jugador está activo en otro equipo");
+            const error = new Error();
             error.name = "AlreadyActive"
             throw error;
         }
@@ -114,7 +112,6 @@ router.post('/:id/roster', async (req, res) => {
         res.status(error.statusCode).send(error.message)
     }
 });
-
 
 router.delete('/:id/roster/:playerId', async (req, res) => {
     try{
@@ -193,14 +190,17 @@ router.delete('/:id', async (req, res) => {
 function getErrorMessage(er) {
     console.log(er)
 
-    if(er.name == 'AlreadyActive') { return { statusCode: 400, message: er.message } }
+    if(er.name == 'EmptyList') { return { statusCode: 404, message: 'No existen equipos registrados en el sistema' } }
+    if(er.name == 'TeamNotFound') { return { statusCode: 404, message: 'No existe ese equipo en el sistema.' } }
+    if(er.name == 'AlreadyActive') { return { statusCode: 400, message: 'No se puede eliminar el jugador porque está activo en algún equipo' } }
+    if(er.name == 'AlreadyActiveInThisTeam') { return { statusCode: 400, message: 'No se puede eliminar el jugador porque está activo en este equipo' } }
+    if(er.name == 'PlayerNotActive') { return { statusCode: 404, message: 'Jugador no encontrado.' } }
+
+    if(er.name == 'NeedParameters') { return { statusCode: 400, message: 'Falta el parámetro de búsqueda.' } }
     if(er.name == 'ValidationError') { return { statusCode: 400, message: 'Datos incorrectos: faltan campos obligatorios' } }
-    if(er.name == 'NotFound') { return { statusCode: 404, message: er.message } }
-    if(er.name == 'PlayerNotActive') { return { statusCode: 404, message: 'El jugador no está activo en el roster de este equipo.' } }
-    if(er.name == 'TeamNotFound') { return { statusCode: 404, message: 'Equipo no encontrado.' } }
 
     // Si no es el error de falta de datos entonces con el codigo 11000 es el error de clave duplicada
-    if(er.code == 11000) { return { statusCode: 404, message: 'El nombre ya está registrado' } }
+    if(er.code == 11000) { return { statusCode: 404, message: 'El nickname ya está registrado' } }
     
     // Si no es ninguno de los anteriores el error debe ser del servidor
     return { statusCode: 500, message: 'Error interno del servidor' }

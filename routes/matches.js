@@ -87,7 +87,9 @@ router.delete('/:id', async (req, res) => {
  
 
 function getErrorMessage(er) {
-    console.log("errors: ", er.errors.map(e => e.kind))
+    //console.log("errors: ", Object.values(er.errors).map(s => s.kind));
+
+    
 
     if(er.name == 'AlreadyActive') { return { statusCode: 400, message: er.message } }
     if(er.name == 'ValidationError') { return { statusCode: 400, message: 'Datos incorrectos: faltan campos obligatorios' } }
