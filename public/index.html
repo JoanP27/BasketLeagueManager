@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basket LeagueManager - Test Client</title>
+    
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script></head>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+<body class="bg-light">
+
+    <div class="container py-5">
+        <h1 class="mb-4 text-center">
+            Basket LeagueManager API Test
+        </h1>
+
+        <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="players-tab" data-bs-toggle="tab" data-bs-target="#players-pane" type="button" role="tab">
+                    <i class="bi bi-people-fill me-1"></i> Jugadores
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="teams-tab" data-bs-toggle="tab" data-bs-target="#teams-pane" type="button" role="tab">
+                    <i class="bi bi-shield-shaded me-1"></i> Equipos
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="matches-tab" data-bs-toggle="tab" data-bs-target="#matches-pane" type="button" role="tab">
+                    <i class="bi bi-calendar-event me-1"></i> Partidos
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="myTabContent">
+            
+            <div class="tab-pane fade show active" id="players-pane" role="tabpanel">
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-primary text-white">
+                                <i class="bi bi-person-plus-fill me-1"></i> Nuevo Jugador
+                            </div>
+                            <div class="card-body">
+                                <form id="createPlayerForm">
+                                    <div class="mb-3">
+                                        <label class="form-label">Nickname</label>
+                                        <input type="text" class="form-control" id="p_nickname" required minlength="3" maxlength="20">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Nombre</label>
+                                        <input type="text" class="form-control" id="p_name" required minlength="3" maxlength="50">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">País (2 letras, ej: ES)</label>
+                                        <input type="text" class="form-control" id="p_country" required pattern="[A-Z]{2}" title="Dos letras mayúsculas">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Fecha Nacimiento</label>
+                                        <input type="date" class="form-control" id="p_birthDate" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Rol</label>
+                                        <select class="form-select" id="p_role" required>
+                                            <option value="base">Base</option>
+                                            <option value="escolta">Escolta</option>
+                                            <option value="alero">Alero</option>
+                                            <option value="ala-pivot">Ala-Pivot</option>
+                                            <option value="pivot">Pivot</option>
+                                            <option value="polivalente">Polivalente</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100">Crear Jugador</button>
+                                </form>
+                            </div>
+                        </div>
+                        
+                        <div class="card mt-3 shadow-sm">
+                            <div class="card-header">
+                                <i class="bi bi-search me-1"></i> Buscar por Nombre
+                            </div>
+                            <div class="card-body">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="searchPlayerName" placeholder="Nombre...">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="searchPlayer()">
+                                        <i class="bi bi-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-8">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h3>Listado de Jugadores</h3>
+                            <button class="btn btn-sm btn-secondary" onclick="loadPlayers()">
+                                <i class="bi bi-arrow-clockwise me-1"></i> Refrescar
+                            </button>
+                        </div>
+                        <div class="table-responsive shadow-sm rounded">
+                            <table class="table table-striped table-hover border mb-0">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Nickname</th>
+                                        <th>Nombre</th>
+                                        <th>País</th>
+                                        <th>Rol</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="playersTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="teams-pane" role="tabpanel">
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-success text-white">
+                                <i class="bi bi-shield-plus me-1"></i> Nuevo Equipo
+                            </div>
+                            <div class="card-body">
+                                <form id="createTeamForm">
+                                    <div class="mb-3">
+                                        <label class="form-label">Nombre del Equipo</label>
+                                        <input type="text" class="form-control" id="t_name" required minlength="3" maxlength="50">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Fundado en (Fecha opcional)</label>
+                                        <input type="date" class="form-control" id="t_foundedAt">
+                                    </div>
+                                    <button type="submit" class="btn btn-success w-100">Crear Equipo</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-8">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h3>Listado de Equipos</h3>
+                            <button class="btn btn-sm btn-secondary" onclick="loadTeams()">
+                                <i class="bi bi-arrow-clockwise me-1"></i> Refrescar
+                            </button>
+                        </div>
+                        <div class="table-responsive shadow-sm rounded">
+                            <table class="table table-striped table-hover border mb-0">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Fundado</th>
+                                        <th>Jugadores (Activos)</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="teamsTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="matches-pane" role="tabpanel">
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-warning text-dark">
+                                <i class="bi bi-trophy-fill me-1"></i> Nuevo Partido
+                            </div>
+                            <div class="card-body">
+                                <form id="createMatchForm">
+                                    <div class="mb-3">
+                                        <label class="form-label">Torneo (Texto)</label>
+                                        <input type="text" class="form-control" id="m_tournament" required minlength="3">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Fecha</label>
+                                        <input type="date" class="form-control" id="m_date" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Fase</label>
+                                        <select class="form-select" id="m_stage" required>
+                                            <option value="Group">Group</option>
+                                            <option value="Quarterfinal">Quarterfinal</option>
+                                            <option value="Semifinal">Semifinal</option>
+                                            <option value="Final">Final</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Equipo Local (ID)</label>
+                                        <input type="text" class="form-control" id="m_homeTeam" placeholder="Pegar ID Equipo" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Puntos Local</label>
+                                        <input type="number" class="form-control" id="m_homeScore" value="0" min="0" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Equipo Visitante (ID)</label>
+                                        <input type="text" class="form-control" id="m_awayTeam" placeholder="Pegar ID Equipo" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Puntos Visitante</label>
+                                        <input type="number" class="form-control" id="m_awayScore" value="0" min="0" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-warning w-100">Registrar Partido</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-8">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h3>Historial de Partidos</h3>
+                            <button class="btn btn-sm btn-secondary" onclick="loadMatches()">
+                                <i class="bi bi-arrow-clockwise me-1"></i> Refrescar
+                            </button>
+                        </div>
+                        <div class="table-responsive shadow-sm rounded">
+                            <table class="table table-striped table-hover border mb-0">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Torneo</th>
+                                        <th>Fecha</th>
+                                        <th>Local</th>
+                                        <th>Visitante</th>
+                                        <th>Res.</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="matchesTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div> </div> <div class="modal fade" id="editPlayerModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-pencil-square me-1"></i> Editar Jugador
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editPlayerForm">
+                        <input type="hidden" id="edit_p_id">
+                        <div class="mb-3">
+                            <label class="form-label">Nickname</label>
+                            <input type="text" class="form-control" id="edit_p_nickname" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="edit_p_name" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Guardar Cambios</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="teamDetailsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-light">
+                    <h5 class="modal-title" id="teamDetailsTitle">Gestión de Equipo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="details_t_id">
+                    
+                    <div class="card mb-3">
+                        <div class="card-body bg-light">
+                            <h6><i class="bi bi-person-plus-fill me-1"></i> Añadir Jugador al Roster</h6>
+                            <form id="addToRosterForm" class="row g-2 align-items-end">
+                                <div class="col-md-5">
+                                    <label class="form-label small">ID Jugador</label>
+                                    <input type="text" class="form-control form-control-sm" id="roster_p_id" placeholder="Pegar ID" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label small">Fecha Unión</label>
+                                    <input type="date" class="form-control form-control-sm" id="roster_date" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <button type="submit" class="btn btn-success btn-sm w-100">Añadir</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <h6><i class="bi bi-people-fill me-1"></i> Roster Activo</h6>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Jugador (Nombre)</th>
+                                    <th>Nickname</th>
+                                    <th>Desde</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rosterTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="index.js"></script>
+</body>
+</html>

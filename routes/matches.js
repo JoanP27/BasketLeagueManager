@@ -7,7 +7,7 @@ export const router = express.Router();
 
 router.get('/', async (req, res) => {
     try{
-        const match = await Match.find();
+        const match = await Match.find().populate('homeTeam').populate('awayTeam');
 
         if(match.length <= 0) {
             const error = Error()
@@ -15,11 +15,11 @@ router.get('/', async (req, res) => {
             throw error;
         }
 
-        res.status(200).send(match)
+        res.status(200).send({result: match})
 
     } catch(ex) {
         const error = getErrorMessage(ex);
-        res.status(error.statusCode).send(error.message);
+        res.status(error.statusCode).send({error: error.message});
     }
 });
 
@@ -39,7 +39,7 @@ router.get('/:id', async(req, res) => {
 
     } catch(ex){
         const error = getErrorMessage(ex);
-        res.status(error.statusCode).send(error.message)
+        res.status(error.statusCode).send({error: error.message})
     }
 });
 
@@ -59,7 +59,7 @@ router.post('/', async (req, res) => {
     } catch(ex) {
         
         const error = getErrorMessage(ex);
-        res.status(error.statusCode).send(error.message)
+        res.status(error.statusCode).send({error: error.message})
     }
 });
 
@@ -77,7 +77,7 @@ router.delete('/:id', async (req, res) => {
         res.status(200).send(deletedMatch);
     } catch (ex) {
         const error = getErrorMessage(ex);
-        res.status(error.statusCode).send(error.message)
+        res.status(error.statusCode).send({error: error.message})
     }
 });
 

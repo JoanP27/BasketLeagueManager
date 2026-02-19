@@ -17,11 +17,11 @@ router.get('/', async (req, res) => {
             throw error;
         }
 
-        res.status(200).send(players)
+        res.status(200).send({result: players})
 
     } catch(ex) {
         const error = getErrorMessage(ex);
-        res.status(error.statusCode).send(error.message);
+        res.status(error.statusCode).send({error: error.message});
     }
 });
 
@@ -44,11 +44,11 @@ router.get('/find', async(req, res) => {
             throw error;
         }
 
-        res.status(200).send(player);
+        res.status(200).send({result: player});
 
     } catch(ex) {
         const error = getErrorMessage(ex);
-        res.status(error.statusCode).send(error.message);
+        res.status(error.statusCode).send({error: error.message});
     }
 })
 
@@ -65,12 +65,14 @@ router.get('/:id', async (req, res) => {
             throw err;
         }
 
-        res.status(200).send(player);
+        
+
+        res.status(200).send({result: player});
     }
     catch(ex){
         console.log(ex.cause)
         const error = getErrorMessage(ex);
-        res.status(error.statusCode).send(error.message)
+        res.status(error.statusCode).send({error: error.message})
     }
 })  
 
@@ -80,11 +82,11 @@ router.post('/', async (req, res) => {
         const player = new Player({...req.body});
         const savedPlayer = player.save();
 
-        res.status(201).send(savedPlayer);
+        res.status(201).send({result: savedPlayer});
 
     } catch(ex) {
         const error = getErrorMessage(ex);
-        res.status(error.statusCode).send(error.message)
+        res.status(error.statusCode).send({error: error.message})
     }
 })
 
@@ -92,27 +94,27 @@ router.put('/:id', async (req, res) => {
     
     try {
         const { id } = req.params;
-        const player = { ...req.body };
+        const { _id, ...player } = req.body;
+        
 
-        const update = Player.findByIdAndUpdate(id, player, { new: true })
+        const update = await Player.findByIdAndUpdate(id, player, { new: true })
 
-        if(!player) {
+        if(!update) {
             const err = new Error()
             err.name = "PlayerNotFound"
             throw err;
         }
 
-        res.status(201).send(savedPlayer);
+        res.status(201).send({result: update});
     } catch(ex) {
         const error = getErrorMessage(ex);
-        res.status(error.statusCode).send(error.message)
+        res.status(error.statusCode).send({error: error.message})
     }
 });
 
 
 router.delete('/:id', async (req, res) => {
     try {
-        console.log(req.params.id)
         const player = await Player.findOne({_id: req.params.id});
 
         if (!player) {
@@ -131,11 +133,11 @@ router.delete('/:id', async (req, res) => {
 
         const deletedPlayer = await player.deleteOne();
 
-        res.status(200).send(deletedPlayer);
+        res.status(200).send({result: deletedPlayer});
     }
     catch(ex){
         const error = getErrorMessage(ex);
-        res.status(error.statusCode).send(error.message)
+        res.status(error.statusCode).send({error: error.message})
     }
 });
 
