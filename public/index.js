@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:8080';
+const API_URL = 'http://217.154.189.231:8080';
 
 // ================= UTILIDADES ================= //
 
