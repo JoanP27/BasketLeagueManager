@@ -1,4 +1,4 @@
-const API_URL = 'https://https://basket.joanpomares.es/';
+const API_URL = 'https://basket.joanpomares.es/';
 
 // ================= UTILIDADES ================= //
 
