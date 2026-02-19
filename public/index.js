@@ -1,4 +1,4 @@
-const API_URL = 'https://217.154.189.231:8080';
+const API_URL = 'https://https://basket.joanpomares.es/';
 
 // ================= UTILIDADES ================= //
 
