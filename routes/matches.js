@@ -1,6 +1,8 @@
 import mongoose, { MongooseError } from 'mongoose';
 import express from 'express';
 import { Match } from '../models/match.js';
+import { Roster } from '../models/team.js';
+import { Team } from '../models/team.js';
 
 
 export const router = express.Router();
@@ -48,9 +50,18 @@ router.post('/', async (req, res) => {
     try {
         const match = new Match({...req.body});
 
-        if(match.awayTeam == match.homeTeam) {
+        if(match.awayTeam.equals(match.homeTeam)) {
             const err = new Error();
             err.name = "SameTeams"
+            throw err;
+        }
+
+        const team1 = await Team.findById(match.awayTeam);
+        const team2 = await Team.findById(match.homeTeam);
+
+        if(!team1 || !team2) {
+            const err = new Error();
+            err.name = "TeamNotFound"
             throw err;
         }
 
@@ -90,6 +101,7 @@ function getErrorMessage(er) {
     if(er.name == 'EmptyList') { return { statusCode: 404, message: 'No existen partidos registrados.' } }
 
     if(er.name == 'MatchNotFound') { return { statusCode: 404, message: 'Partido no encontrado.' } }
+    if(er.name == 'TeamNotFound') { return { statusCode: 404, message: 'Equipo no encontrado.' } }
     
     if(er.name == 'SameTeams') { return { statusCode: 400, message: 'El equipo local y visitante no pueden ser el mismo.' } }
 
