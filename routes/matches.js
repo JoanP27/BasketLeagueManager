@@ -39,6 +39,8 @@ router.get('/:id', async(req, res) => {
             throw err;
         }
 
+        res.status(200).send(match)
+
     } catch(ex){
         const error = getErrorMessage(ex);
         res.status(error.statusCode).send({error: error.message})

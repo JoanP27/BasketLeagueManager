@@ -132,7 +132,7 @@ router.delete('/:id', async (req, res) => {
 
         const deletedPlayer = await player.deleteOne();
 
-        res.status(200).send({result: deletedPlayer});
+        res.status(200).send({result: player});
     }
     catch(ex){
         const error = getErrorMessage(ex);
@@ -151,7 +151,7 @@ function getErrorMessage(er) {
     if(er.name == 'ValidationError') { return { statusCode: 400, message: 'Datos incorrectos: faltan campos obligatorios' } }
 
     // Si no es el error de falta de datos entonces con el codigo 11000 es el error de clave duplicada
-    if(er.code == 11000) { return { statusCode: 404, message: 'El nickname ya está registrado' } }
+    if(er.code == 11000) { return { statusCode: 400, message: 'El nickname ya está registrado' } }
     
     // Si no es ninguno de los anteriores el error debe ser del servidor
     return { statusCode: 500, message: 'Error interno del servidor' }
