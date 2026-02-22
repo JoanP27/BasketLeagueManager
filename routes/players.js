@@ -77,10 +77,9 @@ router.get('/:id', async (req, res) => {
 })  
 
 router.post('/', async (req, res) => {
-
     try {
         const player = new Player({...req.body});
-        const savedPlayer = player.save();
+        const savedPlayer = await player.save();
 
         res.status(201).send({result: savedPlayer});
 
