@@ -36,7 +36,7 @@ router.get('/find', async(req, res) => {
             throw error;
         }
 
-        const player = await Player.find({ name: { $regex: name, $options: 'i' } });
+        const player = await Player.findOne({ name: { $regex: name, $options: 'i' } });
 
         if (!player) {
             const error = Error()
