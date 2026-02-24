@@ -163,6 +163,8 @@ router.delete('/:id/roster/:playerId', async (req, res) => {
     }
 })
 
+
+
 router.delete('/:id', async (req, res) => {
     try{
         const teamId = req.params.id;

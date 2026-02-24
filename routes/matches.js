@@ -26,6 +26,50 @@ router.get('/', async (req, res) => {
 });
 
 
+router.put('/:id/description', async (req,res) => {
+    try{
+        const matchId = req.params.id;
+        const { description } = req.body;
+        const match = await Match.findById(matchId);
+        
+        if(!match) {
+            const error = new Error();
+            error.name = "MatchNotFound"
+            throw error;
+        }
+
+        match.description = description;
+        const savedMatch = await match.save();
+
+        res.status(200).send(savedMatch)
+    }
+    catch(ex){
+        const error = getErrorMessage(ex);
+        res.status(error.statusCode).send({error: error.message})
+    }
+});
+
+router.delete('/:id/description', async (req,res) => {
+    try{
+        const matchId = req.params.id;
+        const match = await Match.findById(matchId);
+        if(!match) {
+            const error = new Error();
+            error.name = "MatchNotFound"
+            throw error;
+        }
+
+        match.description = "";
+        const savedMatch = await match.save();
+
+        res.status(200).send(savedMatch)
+    }
+    catch(ex){
+        const error = getErrorMessage(ex);
+        res.status(error.statusCode).send({error: error.message})
+    }
+});
+
 router.get('/:id', async(req, res) => {
     try
     {

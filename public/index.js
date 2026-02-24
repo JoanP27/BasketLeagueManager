@@ -343,6 +343,7 @@ async function loadMatches() {
                 <td class="text-end">${m.homeTeam ? m.homeTeam.name : 'Unknown'}</td>
                 <td>${m.awayTeam ? m.awayTeam.name : 'Unknown'}</td>
                 <td class="fw-bold text-center">${m.homeScore} - ${m.awayScore}</td>
+                <td class="fw-bold text-center">${m.description}</td>
                 <td>
                     <button class="btn btn-sm btn-outline-danger" onclick="deleteMatch('${m._id}')" title="Borrar Partido">
                         <i class="bi bi-trash-fill"></i>

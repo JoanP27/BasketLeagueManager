@@ -35,6 +35,9 @@ const matchSchema = new mongoose.Schema({
         type: Number,
         required: true,
         min: 0
+    },
+    description: {
+        type: String,
     }
 });
 matchSchema.index({ tournament: 1, date: 1, homeTeam: 1, awayTeam: 1 }, { unique: true });
