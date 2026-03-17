@@ -4,10 +4,15 @@ import express from 'express';
 import { Player } from '../models/player.js';
 import { Team } from '../models/team.js';
 import { Roster } from '../models/team.js';
+import { protegerRuta } from '../auth/auth.js';
+
+
 
 export const router = express.Router();
 
-router.get('/', async (req, res) => {
+const roles = ['admin', 'manager', 'user']
+
+router.get('/',protegerRuta(roles), async (req, res) => {
     try{
         const players = await Player.find();
 

@@ -5,9 +5,12 @@ import mongoose from "mongoose";
 import { router as playerRouter } from './routes/players.js';
 import { router as matchRouter } from './routes/matches.js';
 import { router as teamRouter } from './routes/teams.js';
+import { router as authRouter } from './routes/auth.js';
+
 import path from 'path';
 
 import cors from 'cors';
+
 
 
 
@@ -27,6 +30,7 @@ app.use(express.static(path.join(path.dirname('.'), 'public')))
 app.use('/players', playerRouter);
 app.use('/matches', matchRouter);
 app.use('/teams', teamRouter);
+app.use('/auth', authRouter);
 
 const puerto = 8080
-app.listen(puerto);
+app.listen(puerto, () => console.log(`Escuchando en el puerto ${puerto}`));
