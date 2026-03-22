@@ -3,11 +3,16 @@ import express from 'express';
 import { Match } from '../models/match.js';
 import { Roster } from '../models/team.js';
 import { Team } from '../models/team.js';
+import { protegerRuta } from '../auth/auth.js';
 
 
 export const router = express.Router();
 
-router.get('/', async (req, res) => {
+const roles = ['admin', 'manager', 'user']
+const admin = ['admin']
+const manager = ['admin', 'manager']
+
+router.get('/',protegerRuta(roles), async (req, res) => {
     try{
         const match = await Match.find().populate('homeTeam').populate('awayTeam');
 
@@ -24,7 +29,6 @@ router.get('/', async (req, res) => {
         res.status(error.statusCode).send({error: error.message});
     }
 });
-
 
 router.put('/:id/description', async (req,res) => {
     try{
@@ -70,7 +74,7 @@ router.delete('/:id/description', async (req,res) => {
     }
 });
 
-router.get('/:id', async(req, res) => {
+router.get('/:id',protegerRuta(roles), async(req, res) => {
     try
     {
         const { id } = req.params;
@@ -91,8 +95,7 @@ router.get('/:id', async(req, res) => {
     }
 });
 
-
-router.post('/', async (req, res) => {
+router.post('/',protegerRuta(manager), async (req, res) => {
     try {
         const match = new Match({...req.body});
 
@@ -120,7 +123,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id',protegerRuta(manager), async (req, res) => {
     try {
         const id = req.params.id;
         const deletedMatch = await Match.findByIdAndDelete(id);

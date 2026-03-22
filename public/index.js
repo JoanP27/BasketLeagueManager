@@ -142,7 +142,7 @@ async function login(e) {
             login: loginField, 
             password: passwordField 
         });
-        
+        console.log(token)
         // Si el backend nos devuelve un token, lo guardamos en el navegador (localStorage)
         localStorage.setItem('jwt_token', token);
         showAlert('Login exitoso', 'success');

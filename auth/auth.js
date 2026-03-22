@@ -26,9 +26,9 @@ export const protegerRuta = roles => {
         token = token.slice(7);
 
     const result = validarToken(token)
-
+    console.log(result)
     if (result && roles.includes(result.login.rol))
         next();
     else
-        res.send({ok: false, error: "Usuario no autorizado"});
+        res.status(401).send({error: 'Acceso no autorizado', result: null})
 }}

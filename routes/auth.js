@@ -15,17 +15,36 @@ const usuarios = [
     { usuario: 'pepe2', password: 'pepeuser', rol: 'user' }
 ];
 
+class RestError extends Error {
+    constructor(message, status) {
+        super(message);
+        this.name = 'RestError';
+        this.status = status;
+    }
+}
 
-router.post('/login', (req, res) => {
-    const user = {... req.body}
+router.post('/login', async (req, res) => {
+    try {
+        const user = {... req.body}
+        const saltRounds = 10;
 
-    const userExists = usuarios.filter(u => 
-        u.usuario == user.usuario && u.password == user.password);
+        const usuario = await User.findOne({login: user.login});
+        
+        if(!usuario) {
+            throw new RestError('El usuario no existe', 404);
+        }
 
-    if (userExists.length == 1)
-        res.send({ok: true, token: generarToken(userExists[0])});
-    else
-        res.send({ok: false});
+        const validPassword = await Bcrypt.compare(user.password, usuario.password);
+
+        if(!validPassword) {
+            throw new RestError('Contraseña incorrecta', 400);
+        }
+
+        res.send({result: generarToken(usuario)});
+    } catch(ex) {
+        const errResult = getErrorMessage(ex);
+        res.status(errResult.statusCode).send({error: errResult.message})
+    }
 })
 
 router.post('/register', async (req, res) =>  {
@@ -43,13 +62,30 @@ router.post('/register', async (req, res) =>  {
         console.log(userBuscado)
 
         if(userBuscado) {
-            res.send({ok: false, error: 'el usuario ya existe'})
+            throw new RestError('El usuario ya existe', 400);
         }
 
         await user.save();
 
         res.send({ok: true})
     }catch(ex) {
-        res.send({ok: false, error: ex.message})
+        const errResult = getErrorMessage(ex);
+        res.status(errResult.statusCode).send({error: errResult.message})
     } 
 });
+
+function getErrorMessage(er) {
+    console.log(er)
+        
+    if(er.name == 'RestError') { return { statusCode: er.status, message: er.message } }
+    
+    if(er.name == 'ValidationError') { return { statusCode: 400, message: 'Datos incorrectos: faltan campos obligatorios' } }
+
+    // Si no es el error de falta de datos entonces con el codigo 11000 es el error de clave duplicada
+    if(er.code == 11000) { return { statusCode: 404, message: 'El nickname ya está registrado' } }
+    
+
+
+    // Si no es ninguno de los anteriores el error debe ser del servidor
+    return { statusCode: 500, message: 'Error interno del servidor' }
+}

@@ -4,11 +4,15 @@ import { Player } from '../models/player.js';
 import { Team } from '../models/team.js';
 import { Roster } from '../models/team.js';
 import { Match } from '../models/match.js';
+import { protegerRuta } from '../auth/auth.js';
 
 export const router = express.Router();
 
+const roles = ['admin', 'manager', 'user']
+const admin = ['admin']
+const manager = ['admin', 'manager']
 
-router.get('/', async (req, res) => {
+router.get('/',protegerRuta(roles), async (req, res) => {
     try{
         const teams = await Team.find().populate('roster');
 
@@ -26,7 +30,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id',protegerRuta(roles), async (req, res) => {
     try
     {
         const { id } = req.params;
@@ -51,7 +55,7 @@ router.get('/:id', async (req, res) => {
     }
 })  
 
-router.post('/', async (req, res) => {
+router.post('/',protegerRuta(admin), async (req, res) => {
     try {
         const team = new Team({... req.body});
         const savedTeam = await team.save();
@@ -63,7 +67,7 @@ router.post('/', async (req, res) => {
     }
 })
 
-router.post('/:id/roster', async (req, res) => {
+router.post('/:id/roster',protegerRuta(manager), async (req, res) => {
     try{
         const teamId = req.params.id;
         const roster = new Roster({...req.body});
@@ -123,7 +127,7 @@ router.post('/:id/roster', async (req, res) => {
     }
 });
 
-router.delete('/:id/roster/:playerId', async (req, res) => {
+router.delete('/:id/roster/:playerId',protegerRuta(manager), async (req, res) => {
     try{
         const teamId = req.params.id
         const playerId = req.params.playerId;
@@ -152,7 +156,7 @@ router.delete('/:id/roster/:playerId', async (req, res) => {
 
         activePlayer[0].save();
 
-        const savedTeam = Team.findByIdAndUpdate(teamId, team)
+        const savedTeam = await Team.findByIdAndUpdate(teamId, team)
         console.log(activePlayer);
 
         res.status(200).send({result: team});
@@ -163,9 +167,7 @@ router.delete('/:id/roster/:playerId', async (req, res) => {
     }
 })
 
-
-
-router.delete('/:id', async (req, res) => {
+router.delete('/:id',protegerRuta(admin), async (req, res) => {
     try{
         const teamId = req.params.id;
         const team = await Team.findById(teamId);

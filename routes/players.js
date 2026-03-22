@@ -11,6 +11,8 @@ import { protegerRuta } from '../auth/auth.js';
 export const router = express.Router();
 
 const roles = ['admin', 'manager', 'user']
+const admin = ['admin']
+const manager = ['admin', 'manager']
 
 router.get('/',protegerRuta(roles), async (req, res) => {
     try{
@@ -30,7 +32,7 @@ router.get('/',protegerRuta(roles), async (req, res) => {
     }
 });
 
-router.get('/find', async(req, res) => {
+router.get('/find',protegerRuta(roles), async(req, res) => {
 
     try {
         const { name } = req.query
@@ -57,7 +59,7 @@ router.get('/find', async(req, res) => {
     }
 })
 
-router.get('/:id', async (req, res) => {
+router.get('/:id',protegerRuta(roles), async (req, res) => {
     try
     {
         const { id } = req.params;
@@ -81,7 +83,7 @@ router.get('/:id', async (req, res) => {
     }
 })  
 
-router.post('/', async (req, res) => {
+router.post('/', protegerRuta(admin),async (req, res) => {
     try {
         const player = new Player({...req.body});
         const savedPlayer = await player.save();
@@ -94,7 +96,7 @@ router.post('/', async (req, res) => {
     }
 })
 
-router.put('/:id', async (req, res) => {
+router.put('/:id',protegerRuta(admin), async (req, res) => {
     
     try {
         const { id } = req.params;
@@ -116,8 +118,7 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-
-router.delete('/:id', async (req, res) => {
+router.delete('/:id',protegerRuta(admin), async (req, res) => {
     try {
         const player = await Player.findOne({_id: req.params.id});
 
