@@ -43,7 +43,7 @@ router.get('/',protegerRuta(roles), async (req, res) => {
             throw error;
         }
 
-        res.status(200).send({result: players})
+        res.status(200).send({result: players.map(p => p.login)})
 
     } catch(ex) {
         const error = getErrorMessage(ex);
