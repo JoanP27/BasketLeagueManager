@@ -1,6 +1,6 @@
 // Definimos la URL base de nuestra API o servidor backend. 
 // Todos los endpoints se concatenarán a esta dirección.
-const API_URL = 'http://localhost:8080';
+const API_URL = 'https://basket.joanpomares.es/';
 
 // ================= UTILIDADES ================= //
 

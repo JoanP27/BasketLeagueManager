@@ -6,8 +6,17 @@ import { Team } from '../models/team.js';
 import { User } from '../models/users.js';
 import { generarToken } from '../auth/auth.js';
 import Bcrypt from 'bcrypt';
+import { protegerRuta } from '../auth/auth.js';
+
+
+
+
+const roles = ['admin', 'manager', 'user']
+const admin = ['admin']
+const manager = ['admin', 'manager']
 
 export const router = express.Router();
+
 
 const usuarios = [
     { usuario: 'nacho', password: '12345', rol: 'admin' },
@@ -22,6 +31,26 @@ class RestError extends Error {
         this.status = status;
     }
 }
+
+
+router.get('/',protegerRuta(roles), async (req, res) => {
+    try{
+        const players = await User.find();
+
+        if(players.length <= 0) {
+            const error = Error()
+            error.name = "EmptyList"
+            throw error;
+        }
+
+        res.status(200).send({result: players})
+
+    } catch(ex) {
+        const error = getErrorMessage(ex);
+        res.status(error.statusCode).send({error: error.message});
+    }
+});
+
 
 router.post('/login', async (req, res) => {
     try {
@@ -73,6 +102,8 @@ router.post('/register', async (req, res) =>  {
         res.status(errResult.statusCode).send({error: errResult.message})
     } 
 });
+
+
 
 function getErrorMessage(er) {
     console.log(er)
