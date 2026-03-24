@@ -33,7 +33,7 @@ class RestError extends Error {
 }
 
 
-router.get('/',protegerRuta(roles), async (req, res) => {
+router.get('/',protegerRuta(admin), async (req, res) => {
     try{
         const players = await User.find();
 
@@ -44,6 +44,25 @@ router.get('/',protegerRuta(roles), async (req, res) => {
         }
 
         res.status(200).send({result: players.map(p => p.login)})
+
+    } catch(ex) {
+        const error = getErrorMessage(ex);
+        res.status(error.statusCode).send({error: error.message});
+    }
+});
+
+
+router.get('/contar',protegerRuta(roles), async (req, res) => {
+    try{
+        const players = await User.find();
+
+        if(players.length <= 0) {
+            const error = Error()
+            error.name = "EmptyList"
+            throw error;
+        }
+
+        res.status(200).send({result: players.length})
 
     } catch(ex) {
         const error = getErrorMessage(ex);
