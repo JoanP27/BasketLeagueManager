@@ -102,7 +102,8 @@ router.put('/:id',protegerRuta(admin), async (req, res) => {
         const { id } = req.params;
         const { _id, ...player } = req.body;
         
-
+        const validate = Player.validate(player)
+        
         const update = await Player.findByIdAndUpdate(id, player, { new: true })
 
         if(!update) {
