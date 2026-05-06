@@ -70,8 +70,21 @@ await auth.peticionTokenIncorrecto()
 console.log('')
 console.log('[ Creacion de Jugadores ]'.yellow)
 
+// Insertar jugador
 const datos = await player.crearJugador(adminToken);
-await player.crearJugadorExistente(adminToken, datos.player);
+showResult(datos);
+
+// Insertar jugador que ya existe
+showResult(await player.crearJugadorExistente(adminToken, datos.datos))
+
+// Insertar jugador con datos incorrectos
+showResult(await player.crearJugadorDatosIncorrectos(adminToken))
+
+// Insertar jugador con rol no authorizado
+showResult(await player.crearJugadorRolUsuario(userToken))
+
+
+/*
 await player.listarJugadores(adminToken);
 await player.buscarUnJugador(adminToken, datos.respuesta);
 await player.actualizarJugador(adminToken, datos.respuesta);
@@ -79,11 +92,8 @@ await player.buscarUnJugadorInexistente(adminToken);
 await player.actualizarJugadorFaltandoCampos(adminToken, datos.respuesta);
 console.log(tests)
 
-// Insertar jugador
 
-// Insertar jugador con datos incorrectos
 
-// Insertar jugador que ya existe
 
 //---
 
@@ -115,4 +125,4 @@ console.log(tests)
 
 // ----------------------------------------
 
-// Equipos: mismo que jugadores pero usando relaciones..
+// Equipos: mismo que jugadores pero usando relaciones..*/

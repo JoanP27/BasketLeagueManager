@@ -19,16 +19,17 @@ const setToken = (token) => {
     }
 };
 
-const showResult = (error = false, test = "" , message = "") => {
+/*const showResult = (error = false, test = "" , message = "") => {
     if (error == true) {
         return console.log(colors.red(`${colors.magenta(sumar(true))} [x] Test ${colors.underline(test)} Fallido => ${message}`))
     }
     return console.log(colors.green(`${colors.magenta(sumar())} [v] Test ${colors.underline(test)} Correcto => ${message}`))
-} 
+}*/
 
 export const crearJugador = async(token, player = null) => {
-    setToken(token);
-    if(player == null) {
+    setToken(token)
+    
+    if(!player) {
         player = {
             nickname: `player_${Date.now()}`,
             name: "Test Player",
@@ -38,20 +39,130 @@ export const crearJugador = async(token, player = null) => {
             lesionado: false
         }
     }
+
     try {
-        const respuesta = await axiosInstance.post('/players', player);
-        if (respuesta.status === 201) {
-            showResult(false, 'Creacion de jugador', 'id de jugador => ' + colors.yellow(respuesta.data.result._id))
-            return {player: player, respuesta: respuesta.data.result._id};
-        } else {
-            throw new Error("Estado no fue 201");
+        const resp = await axiosInstance.post('/players', player);
+        if(resp.status == 201) return { 
+            name: 'Crear Jugador', 
+            result: true, 
+            message: 'jugador creado correctamente',  
+            datos: resp.data.result
         }
-    } catch (error) {
-        console.error('error: ', error)
-        showResult(true, error.response?.data?.error || error.message)
-        return null;
+
+        throw new Error('el estado no era 201');
+    }
+    catch(ex) {
+        return { 
+            name: 'Crear Jugador', 
+            result: false, 
+            message: ex.response?.data?.error || ex.message,  
+            datos: null
+        }
     }
 }
+export const crearJugadorExistente = async(token, player) => {
+    setToken(token)
+    try {
+        const resp = await axiosInstance.post('/players', player);
+        if(resp.status == 201) return { 
+            name: 'Crear Jugador Existente', 
+            result: false, 
+            message: 'jugador creado correctamente',  
+            datos: resp.data.result
+        }
+
+        throw new Error('el estado no era 201');
+    }
+    catch(ex) {
+        if(ex.status == 400)
+            return { 
+                name: 'Crear Jugador Existente', 
+                result: true, 
+                message: ex.response?.data?.error || ex.message,  
+                datos: null
+            }
+        else
+            return { 
+                name: 'Crear Jugador Existente', 
+                result: false, 
+                message: ex.response?.data?.error || ex.message,  
+                datos: null
+            }
+    }
+}
+export const crearJugadorDatosIncorrectos = async(token) => {
+    setToken(token)
+    try {
+        const resp = await axiosInstance.post('/players', {});
+        if(resp.status == 201) return { 
+            name: 'Crear Jugador Faltan datos', 
+            result: false, 
+            message: 'jugador creado correctamente',  
+            datos: resp.data.result
+        }
+
+        throw new Error('el estado no era 201');
+    }
+    catch(ex) {
+        if(ex.status == 400)
+            return { 
+                name: 'Crear Jugador Faltan datos', 
+                result: true, 
+                message: ex.response?.data?.error || ex.message,  
+                datos: null
+            }
+        else
+            return { 
+                name: 'Crear Jugador Faltan datos', 
+                result: false, 
+                message: ex.response?.data?.error || ex.message,  
+                datos: null
+            }
+    }
+}
+export const crearJugadorRolUsuario = async(token) => {
+    setToken(token)
+
+    const player = {
+        nickname: `player_${Date.now()}`,
+        name: "Test Player",
+        country: "ES",
+        birthDate: "1995-05-20",
+        role: "base",
+        lesionado: false
+    }
+
+
+    try {
+        const resp = await axiosInstance.post('/players', player);
+        if(resp.status == 201) return { 
+            name: 'Crear Jugador Rol no autorizado', 
+            result: false, 
+            message: 'jugador creado correctamente',  
+            datos: resp.data.result
+        }
+
+        throw new Error('el estado no era 201');
+    }
+    catch(ex) {
+        if(ex.status == 401)
+            return { 
+                name: 'Crear Jugador Rol no autorizado', 
+                result: true, 
+                message: ex.response?.data?.error || ex.message,  
+                datos: null
+            }
+        else
+            return { 
+                name: 'Crear Jugador Rol no autorizado', 
+                result: false, 
+                message: ex.response?.data?.error || ex.message,  
+                datos: null
+            }
+    }
+}
+
+
 
 export const listarJugadores = async(token) => {
     setToken(token);
@@ -71,20 +182,6 @@ export const listarJugadores = async(token) => {
     }
 }
 
-export const crearJugadorExistente = async(token, player) => {
-    try {
-        const respuesta = await axiosInstance.post('/players', player);
-        if (respuesta.status === 201) {
-            showResult(true, 'Creacion de jugador', 'id de jugador => ' + colors.yellow(respuesta.data.result._id))
-            return {player: player, respuesta: respuesta.data.result._id};
-        } else {
-            throw new Error("Estado no fue 201");
-        }
-    } catch (error) {
-        showResult(false, 'Jugador existente' , error.response?.data?.error || error.message)
-        return null;
-    }
-}
 
 export const buscarUnJugador = async(token, playerId) => {
     setToken(token);
