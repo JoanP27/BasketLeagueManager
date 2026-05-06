@@ -83,27 +83,16 @@ showResult(await player.crearJugadorDatosIncorrectos(adminToken))
 // Insertar jugador con rol no authorizado
 showResult(await player.crearJugadorRolUsuario(userToken))
 
-
-/*
-await player.listarJugadores(adminToken);
-await player.buscarUnJugador(adminToken, datos.respuesta);
-await player.actualizarJugador(adminToken, datos.respuesta);
-await player.buscarUnJugadorInexistente(adminToken);
-await player.actualizarJugadorFaltandoCampos(adminToken, datos.respuesta);
-console.log(tests)
-
-
-
-
-//---
-
-// Buscar Jugadores
+// Lista de jugadores
+showResult(await player.listarJugadores(userToken))
 
 // Buscar Jugador por id
+showResult(await player.buscarUnJugador(userToken, datos.datos._id))
 
 // Buscador Jugador por id no existente
+showResult(await player.buscarUnJugadorInexistente(userToken))
 
-// Buscador Jugador por id con id invalido
+
 
 // ----
 

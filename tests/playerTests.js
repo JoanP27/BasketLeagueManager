@@ -19,13 +19,6 @@ const setToken = (token) => {
     }
 };
 
-/*const showResult = (error = false, test = "" , message = "") => {
-    if (error == true) {
-        return console.log(colors.red(`${colors.magenta(sumar(true))} [x] Test ${colors.underline(test)} Fallido => ${message}`))
-    }
-    return console.log(colors.green(`${colors.magenta(sumar())} [v] Test ${colors.underline(test)} Correcto => ${message}`))
-}*/
-
 export const crearJugador = async(token, player = null) => {
     setToken(token)
     
@@ -162,66 +155,174 @@ export const crearJugadorRolUsuario = async(token) => {
     }
 }
 
-
-
 export const listarJugadores = async(token) => {
-    setToken(token);
+    setToken(token)
     try {
-        const respuesta = await axiosInstance.get('/players');
-        if (respuesta.status === 200 && respuesta.data.result.length > 0) {
-            showResult(false, 'Listado de jugadores', 'jugadores encontrados => ' + colors.yellow(respuesta.data.result.length))
-        } else {
-            throw new Error("Estado no fue 200 o listado vacio no capturado como 404");
-        }
-    } catch (error) {
-        if (error.response && error.response.status === 404) {
-            showResult(false, 'Listado de jugadores', 'jugadores encontrados => ' + 0)
-        } else {
-            showResult(false, 'Listado de jugadores', error.response?.data?.error || error.message)
+        const resp = await axiosInstance.get('/players');
+
+        if (resp.status === 200 && resp.data.result.length > 0) 
+            return { 
+                name: 'Listar jugadores', 
+                result: true, 
+                message: 'lista de jugadores correcta',  
+                datos: resp.data.result
+            }
+        throw new Error("Estado no fue 200 o listado vacio no capturado como 404");
+
+    }catch(ex) {
+        return { 
+            name: 'Lista de jugadores', 
+            result: false, 
+            message: ex.response?.data?.error || ex.message,  
+            datos: null
         }
     }
 }
-
-
 export const buscarUnJugador = async(token, playerId) => {
     setToken(token);
-    try {
-        const respuesta = await axiosInstance.get('/players/' + playerId);
-        if (respuesta.status === 200 && respuesta.data.result != null) {
-            showResult(false, 'Buscar jugador por id', 'jugadores encontrado => ' + colors.yellow(respuesta.data.result._id))
-        } else {
-            throw new Error("Estado no fue 200 o listado vacio no capturado como 404");
-        }
-    } catch (error) {
-        if (error.response && error.response.status === 404) {
-            showResult(true, 'Buscar jugador por id', 'jugadores encontrados => ' + 0)
-        } else {
-            showResult(true, 'Buscar jugador por id', error.response?.data?.error || error.message)
+
+     try {
+        const resp = await axiosInstance.get('/players/' + playerId);
+
+        if (resp.status === 200 && respuesta.data.result != null) 
+            return { 
+                name: 'Buscar un jugador', 
+                result: true, 
+                message: 'Buscar un jugador',  
+                datos: resp.data.result
+            }
+        throw new Error("Estado no fue 200 o listado vacio no capturado como 404");
+
+    }catch(ex) {
+        return { 
+            name: 'Buscar un jugador', 
+            result: false, 
+            message: ex.response?.data?.error || ex.message,  
+            datos: null
         }
     }
 }
-
 export const buscarUnJugadorInexistente = async(token) => {
     setToken(token);
-
     try {
-        const res = await axiosInstance.get('/players/69975a85d09119404777415d');
-        if(res.status == 200) {
-            showResult(true, 'Buscar jugador por id', 'jugadores encontrado => ' + colors.yellow(respuesta.data.result._id))
-        }else{
-            throw new Error("Estado no fue 404");
+        return { 
+            name: 'Buscar un jugador', 
+            result: false, 
+            message: 'Jugador encontrado => ' + colors.yellow(respuesta.data.result._id),  
+            datos: resp.data.result
         }
-    }catch(error) {
-
-        if (error.response.status === 404) {
-            showResult(false, 'Buscar jugador por id', 'jugador no encontrado')
-        } else {
-            showResult(true, 'Buscar jugador por id', error.response?.data?.error || error.message)
-        }
+    } catch(ex) {
+        if (ex.response.status === 404) 
+            return { 
+                name: 'Buscar un jugador', 
+                result: true, 
+                message: 'El jugador no existe',  
+                datos: resp.data.result
+            }
+        else 
+            return { 
+                name: 'Buscar un jugador', 
+                result: false, 
+                message: error.response?.data?.error || error.message,  
+                datos: resp.data.result
+            }
     }
 }
 
 export const actualizarJugador = async(token, playerId) => {
+    setToken(token);
+    const player = {
+        _id: playerId,
+        nickname: `player_${Date.now()}`,
+        name: "Test Player",
+        country: "ES",
+        birthDate: "1995-05-20",
+        role: "base",
+        lesionado: false
+    }
+
+    try {
+        return { 
+            name: 'Actualizar un jugador', 
+            result: true, 
+            message: 'Jugador actualizado => ' + colors.yellow(respuesta.data.result._id),  
+            datos: resp.data.result
+        }
+    } catch(ex) {
+        if (ex.response.status === 404) 
+            return { 
+                name: 'Actualizar un jugador', 
+                result: false, 
+                message: 'El jugador no existe',  
+                datos: resp.data.result
+            }
+        else 
+            return { 
+                name: 'Actualizar un jugador', 
+                result: false, 
+                message: error.response?.data?.error || error.message,  
+                datos: resp.data.result
+            }
+    }
+}
+export const actualizarJugadorFaltandoCampos = async(token, playerId) => {
+    setToken(token);
+    try {
+        const respuesta = await axiosInstance.put('/players/' + playerId, {});
+
+        if (respuesta.status === 201) 
+            return { 
+                name: 'Actualizar jugador faltan cambios', 
+                result: false, 
+                message: 'Jugador actualizado => ' + colors.yellow(respuesta.data.result._id),  
+                datos: resp.data.result
+            }
+        throw new Error("Estado no fue 201");
+
+    } catch(ex) {
+        if (error.response.status === 500) {
+            return { 
+                name: 'Actualizar jugador faltan cambios', 
+                result: true, 
+                message: 'faltan campos',
+                datos: null
+            }
+        }
+        return { 
+            name: 'Actualizar jugador faltan cambios', 
+            result: false, 
+            message: error.response?.data?.error || error.message,
+            datos: null
+        }
+    }
+}
+export const eliminarJugador = async(token, playerId) => {
+    setToken(token);
+
+    try {
+        const respuesta = await axiosInstance.delete('/players/' + playerId);
+        if(respuesta.status === 200) {
+           return { 
+                name: 'Eliminacion de jugador', 
+                result: true, 
+                message: 'Jugador eliminado => ' + colors.yellow(respuesta.data.result._id),  
+                datos: resp.data.result
+            }
+        }
+        throw new Error("Estado no fue 201");
+    }
+    catch(ex) {
+        return { 
+            name: 'Eliminacion de jugador', 
+            result: false, 
+            message: error.response?.data?.error || error.message,
+            datos: null
+        }
+    }
+}
+
+
+/*export const actualizarJugador = async(token, playerId) => {
     setToken(token);
     const player = {
         _id: playerId,
@@ -246,9 +347,8 @@ export const actualizarJugador = async(token, playerId) => {
         showResult(true, error.response?.data?.error || error.message)
         return null;
     }
-}
-
-export const actualizarJugadorFaltandoCampos = async(token, playerId) => {
+}*/
+/*export const actualizarJugadorFaltandoCampos = async(token, playerId) => {
     setToken(token);
     const player = {}
     try {
@@ -268,9 +368,8 @@ export const actualizarJugadorFaltandoCampos = async(token, playerId) => {
             showResult(true, 'Actualizar jugador faltando datos', error.response?.data?.error || error.message)
         }
     }
-}
-
-export const eliminarJugadorInexistente = async (token, playerId) => {
+}*/
+/*export const eliminarJugadorInexistente = async (token, playerId) => {
     setToken(token)
 
     try {
@@ -290,9 +389,9 @@ export const eliminarJugadorInexistente = async (token, playerId) => {
         showResult(false, error.response?.data?.error || error.message);
         return;
     }
-}
+}*/
 
-export const eliminarJugador = async(token, playerId) => {
+/*export const eliminarJugador = async(token, playerId) => {
     setToken(token);
 
     try {
@@ -307,6 +406,6 @@ export const eliminarJugador = async(token, playerId) => {
         showResult(true, error.response?.data?.error || error.message);
         return;
     }
-}
+}*/
 
 
