@@ -10,6 +10,15 @@ export const sumar = (error = false) => {
     return tests.total;
 }
 
+// {name: string, result: boolean, message: string}
+const showResult = (resultado) => {
+    if (resultado.result == false) {
+        return console.log(colors.red(`${colors.magenta(sumar(true))} [x] Test ${colors.underline(resultado.name)} Fallido => ${resultado.message}`))
+    }
+
+    return console.log(colors.green(`${colors.magenta(sumar())} [v] Test ${colors.underline(resultado.name)} Correcto => ${resultado.message}`))
+}
+
 // Tests de authenticacion
 
 //const token = await player.authenticate()
@@ -69,3 +78,41 @@ await player.actualizarJugador(adminToken, datos.respuesta);
 await player.buscarUnJugadorInexistente(adminToken);
 await player.actualizarJugadorFaltandoCampos(adminToken, datos.respuesta);
 console.log(tests)
+
+// Insertar jugador
+
+// Insertar jugador con datos incorrectos
+
+// Insertar jugador que ya existe
+
+//---
+
+// Buscar Jugadores
+
+// Buscar Jugador por id
+
+// Buscador Jugador por id no existente
+
+// Buscador Jugador por id con id invalido
+
+// ----
+
+// Actualizar jugador
+
+// Actualizar jugador no existente
+
+// Actualizar jugador con id invalido
+
+// Actualizar jugador con campos incorrectos
+
+// ---
+
+// Eliminar jugador
+
+// Eliminar jugador no existente
+
+// Eliminar jugador con id invalido
+
+// ----------------------------------------
+
+// Equipos: mismo que jugadores pero usando relaciones..

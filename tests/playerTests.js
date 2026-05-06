@@ -173,6 +173,28 @@ export const actualizarJugadorFaltandoCampos = async(token, playerId) => {
     }
 }
 
+export const eliminarJugadorInexistente = async (token, playerId) => {
+    setToken(token)
+
+    try {
+       const respuesta = await axiosInstance.delete('/players/69975a85d09119404777415d');
+
+        if(respuesta.status === 200) {
+            showResult(true, 'Eliminacion de jugador', 'id de jugador => ' + colors.yellow(respuesta.data.result._id));
+            return;
+        }
+        throw new Error('El codigo de respuesta no es 200')
+    }
+    catch(ex) {
+        if(ex.response.status == 404) {
+            showResult(true, 'Eliminacion de jugador', 'juador no encontrado');
+            return;
+        }
+        showResult(false, error.response?.data?.error || error.message);
+        return;
+    }
+}
+
 export const eliminarJugador = async(token, playerId) => {
     setToken(token);
 
