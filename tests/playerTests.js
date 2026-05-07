@@ -264,6 +264,47 @@ export const actualizarJugador = async(token, playerId) => {
         }
     }
 }
+export const actualizarJugadorConNickExistente = async(token, playerId, nickname) => {
+    setToken(token);
+    const player = {
+        _id: playerId,
+        nickname: nickname,
+        name: "Test Player",
+        country: "ES",
+        birthDate: "1995-05-20",
+        role: "base",
+        lesionado: false
+    }
+
+    try {
+        const resp = await axiosInstance.put('/players/' + playerId, player);
+        if(resp.status === 201 && resp.data.result.nickname === player.nickname) {
+            return { 
+                name: 'Actualizar un jugador con nick existente', 
+                result: false, 
+                message: 'Jugador actualizado => ' + colors.yellow(resp.data.result._id),  
+                datos: resp.data.result
+            }
+        }
+        throw new Error('el estado no era 201');
+
+        
+    } catch(ex) {
+        if(ex.response.status === 400) 
+            return { 
+                name: 'Actualizar un jugador con nick existente', 
+                result: true, 
+                message: ex.response?.data?.error || ex.message,  
+                datos: null
+            }
+        return { 
+            name: 'Actualizar un jugador con nick existente', 
+            result: false, 
+            message: ex.response?.data?.error || ex.message,  
+            datos: null
+        }
+    }
+}
 export const actualizarJugadorInexistente = async(token, playerId) => {
     setToken(token);
     const player = {

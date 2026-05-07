@@ -74,6 +74,8 @@ console.log('[ Creacion de Jugadores ]'.yellow)
 const datos = await player.crearJugador(adminToken);
 showResult(datos);
 
+const datos2 = await player.crearJugador(adminToken);
+
 // Insertar jugador que ya existe
 showResult(await player.crearJugadorExistente(adminToken, datos.datos))
 
@@ -94,6 +96,9 @@ showResult(await player.buscarUnJugadorInexistente(userToken))
 
 // Actualizar jugador
 showResult(await player.actualizarJugador(adminToken, datos.datos._id))
+
+// Actualizar jugador con mismo nick a otro
+showResult(await player.actualizarJugadorConNickExistente(adminToken, datos.datos._id, datos2.datos.nickname))
 
 // Actualizar jugador no existente
 showResult(await player.actualizarJugadorInexistente(adminToken))
