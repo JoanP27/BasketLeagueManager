@@ -219,7 +219,7 @@ function getErrorMessage(er) {
     if(er.name == 'PlayerNotFound') { return { statusCode: 404, message: 'Jugador no encontrado.' } }
     if(er.name == 'AlreadyActive') { return { statusCode: 400, message: 'El jugador está activo en otro equipo.' } }
     if(er.name == 'AlreadyActiveInThisTeam') { return { statusCode: 400, message: 'El jugador ya está activo en el roster de este equipo.' } }
-    if(er.name == 'PlayerNotActive') { return { statusCode: 404, message: 'Jugador no encontrado.' } }
+    if(er.name == 'PlayerNotActive') { return { statusCode: 404, message: 'El jugador no esta activo.' } }
     if(er.name == 'CannotDeleteRoster') { return { statusCode: 400, message: 'No se puede eliminar los rosters del equipo' } }
     if(er.name == 'HasMatches') { return { statusCode: 400, message: 'No se puede eliminar el equipo porque tiene partidos asociados.' } }
 

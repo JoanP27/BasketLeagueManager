@@ -1,4 +1,5 @@
 import * as player from "./tests/playerTests.js";
+import * as team from "./tests/teamTests.js";
 import * as auth from "./tests/authTests.js";
 import colors from 'colors'
 
@@ -75,6 +76,8 @@ const datos = await player.crearJugador(adminToken);
 showResult(datos);
 
 const datos2 = await player.crearJugador(adminToken);
+const jugador3 = await player.crearJugador(adminToken);
+const jugador4 = await player.crearJugador(adminToken);
 
 // Insertar jugador que ya existe
 showResult(await player.crearJugadorExistente(adminToken, datos.datos))
@@ -117,6 +120,99 @@ showResult(await player.eliminarJugadorInexistente(adminToken))
 
 // Eliminar jugador Rol no autorizado
 showResult(await player.eliminarJugadorRolNoAutorizado(userToken, datos.datos._id))
+
+// Tests equipos
+console.log(colors.yellow('[ Equipos ]'))
+
+// Crear un equipo
+const respuestaEquipo = await team.crearEquipo(adminToken)
+showResult(respuestaEquipo)
+
+// Crear un equipo ya existente
+showResult(await team.crearEquipoExistente(adminToken, respuestaEquipo.datos));
+
+// Crear un equipo con nombre menor a 3 caracteres
+showResult(await team.crearEquipoConNombreDe2Caracteres(adminToken));
+
+// Crear un equipo con nombre superior a 50 caracteres
+showResult(await team.crearEquipoConNombreDe51Caracteres(adminToken));
+
+// Crear un equipo sin nombre
+showResult(await team.crearEquipoSinNombre(adminToken));
+
+// Crear un equipo sin fecha de fundacion
+showResult(await team.crearEquipoSinFechaFundacion(adminToken));
+
+// Crear un equipo con roaster
+//TODO showResult(await team.crearEquipoSinFechaFundacion(adminToken)); 
+
+// Listar equipos
+showResult(await team.listarEquipos(adminToken))
+
+// Listar un equipo
+showResult(await team.buscarEquipo(adminToken, respuestaEquipo.datos._id))
+
+// Listar un equipo inexistente 
+showResult(await team.buscarEquipoInexistente(adminToken, respuestaEquipo.datos._id))
+
+//Listar un equipo con rol de Usuario
+showResult(await team.buscarEquipoNoAutorizado(userToken, respuestaEquipo.datos._id, 'Listar un equipo usando rol usuario'))
+
+// Listar un equipo con rol de Manager
+showResult(await team.buscarEquipoNoAutorizado(managerToken, respuestaEquipo.datos._id, 'Listar un equipo usando rol manager'))
+
+// Tests Rosters
+
+// Crear un roster
+showResult(await team.crearRoster(managerToken, respuestaEquipo.datos._id, datos.datos._id))
+
+// Crear un roster sin jugador
+showResult(await team.crearRosterSinJugador(adminToken, respuestaEquipo.datos._id, datos.datos._id))
+
+// Crear un roster sin joinDate
+showResult(await team.crearRosterSinFechaDeEntrada(adminToken, respuestaEquipo.datos._id, datos.datos._id))
+
+// Crear un roster sin joinDate
+showResult(await team.crearRosterSinActive(adminToken, respuestaEquipo.datos._id, datos2.datos._id))
+
+// Crear un roster con rol usuario
+showResult(await team.crearRoasterConRolNoAutenticado(userToken, respuestaEquipo.datos._id, datos2.datos._id, 'Crear roster con rol de usuario'))
+
+// Crear un roster con rol manager
+showResult(await team.crearRoster(managerToken, respuestaEquipo.datos._id, jugador3.datos._id, 'Crear roster con rol de manager'))
+
+// Eliminar un roster
+showResult(await team.eliminarRoster(managerToken, respuestaEquipo.datos._id, datos.datos._id))
+
+// Eliminar un roster inexistente
+showResult(await team.eliminarRosterInexistente(managerToken, respuestaEquipo.datos._id))
+
+// Eliminar un roster con equipo inexistente
+showResult(await team.eliminarRosterConEquipoInexistente(managerToken, datos.datos._id))
+
+// Eliminar un roster no activo (que ya ha sido "eliminado")
+showResult(await team.eliminarRosterInactivo(managerToken, respuestaEquipo.datos._id, datos.datos._id))
+
+
+// Tests partidos
+
+// Crear un partido
+
+// Crear un partido ya existente
+
+// Crear un partido sin datos
+
+// Crear un partido con stage incorrecto
+
+// Crear un partido con el mismo homeTeam y awayTeam
+
+// Crear un partido con equipos inexistentes
+
+// Crear un partido con puntos negativos
+
+// Crear un partido con rol usuario
+
+// Crear un partido con rol master
 
 console.log(tests)
 
