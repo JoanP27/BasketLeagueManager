@@ -92,26 +92,28 @@ showResult(await player.buscarUnJugador(userToken, datos.datos._id))
 // Buscador Jugador por id no existente
 showResult(await player.buscarUnJugadorInexistente(userToken))
 
-
-
-// ----
-
 // Actualizar jugador
+showResult(await player.actualizarJugador(adminToken, datos.datos._id))
 
 // Actualizar jugador no existente
-
-// Actualizar jugador con id invalido
+showResult(await player.actualizarJugadorInexistente(adminToken))
 
 // Actualizar jugador con campos incorrectos
+showResult(await player.actualizarJugadorFaltandoCampos(adminToken))
 
-// ---
+// Actualizar jugador no autorizado
+showResult(await player.actualizarJugadorRolNoAutorizado(userToken, datos.datos._id))
 
-// Eliminar jugador
+// Eliminar jugadores
+showResult(await player.eliminarJugador(adminToken, datos.datos._id))
 
 // Eliminar jugador no existente
+showResult(await player.eliminarJugadorInexistente(adminToken))
 
-// Eliminar jugador con id invalido
+// Eliminar jugador Rol no autorizado
+showResult(await player.eliminarJugadorRolNoAutorizado(userToken, datos.datos._id))
 
-// ----------------------------------------
+console.log(tests)
+
 
 // Equipos: mismo que jugadores pero usando relaciones..*/

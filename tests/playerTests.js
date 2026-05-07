@@ -184,11 +184,11 @@ export const buscarUnJugador = async(token, playerId) => {
      try {
         const resp = await axiosInstance.get('/players/' + playerId);
 
-        if (resp.status === 200 && respuesta.data.result != null) 
+        if (resp.status === 200 && resp.data.result != null) 
             return { 
                 name: 'Buscar un jugador', 
                 result: true, 
-                message: 'Buscar un jugador',  
+                message: 'Jugador encontrado => ' + colors.yellow(resp.data.result._id),  
                 datos: resp.data.result
             }
         throw new Error("Estado no fue 200 o listado vacio no capturado como 404");
@@ -205,8 +205,9 @@ export const buscarUnJugador = async(token, playerId) => {
 export const buscarUnJugadorInexistente = async(token) => {
     setToken(token);
     try {
+        const resp = await axiosInstance.get('/players/69975a85d09119404777415d');
         return { 
-            name: 'Buscar un jugador', 
+            name: 'Buscar un jugador Inexistente', 
             result: false, 
             message: 'Jugador encontrado => ' + colors.yellow(respuesta.data.result._id),  
             datos: resp.data.result
@@ -214,17 +215,17 @@ export const buscarUnJugadorInexistente = async(token) => {
     } catch(ex) {
         if (ex.response.status === 404) 
             return { 
-                name: 'Buscar un jugador', 
+                name: 'Buscar un jugador Inexistente', 
                 result: true, 
                 message: 'El jugador no existe',  
-                datos: resp.data.result
+                datos: null
             }
         else 
             return { 
-                name: 'Buscar un jugador', 
+                name: 'Buscar un jugador Inexistente', 
                 result: false, 
                 message: error.response?.data?.error || error.message,  
-                datos: resp.data.result
+                datos: null
             }
     }
 }
@@ -242,87 +243,28 @@ export const actualizarJugador = async(token, playerId) => {
     }
 
     try {
+        const resp = await axiosInstance.put('/players/' + playerId, player);
+        if(resp.status === 201 && resp.data.result.nickname === player.nickname) {
+            return { 
+                name: 'Actualizar un jugador', 
+                result: true, 
+                message: 'Jugador actualizado => ' + colors.yellow(resp.data.result._id),  
+                datos: resp.data.result
+            }
+        }
+        throw new Error('el estado no era 201');
+
+        
+    } catch(ex) {
         return { 
             name: 'Actualizar un jugador', 
-            result: true, 
-            message: 'Jugador actualizado => ' + colors.yellow(respuesta.data.result._id),  
-            datos: resp.data.result
-        }
-    } catch(ex) {
-        if (ex.response.status === 404) 
-            return { 
-                name: 'Actualizar un jugador', 
-                result: false, 
-                message: 'El jugador no existe',  
-                datos: resp.data.result
-            }
-        else 
-            return { 
-                name: 'Actualizar un jugador', 
-                result: false, 
-                message: error.response?.data?.error || error.message,  
-                datos: resp.data.result
-            }
-    }
-}
-export const actualizarJugadorFaltandoCampos = async(token, playerId) => {
-    setToken(token);
-    try {
-        const respuesta = await axiosInstance.put('/players/' + playerId, {});
-
-        if (respuesta.status === 201) 
-            return { 
-                name: 'Actualizar jugador faltan cambios', 
-                result: false, 
-                message: 'Jugador actualizado => ' + colors.yellow(respuesta.data.result._id),  
-                datos: resp.data.result
-            }
-        throw new Error("Estado no fue 201");
-
-    } catch(ex) {
-        if (error.response.status === 500) {
-            return { 
-                name: 'Actualizar jugador faltan cambios', 
-                result: true, 
-                message: 'faltan campos',
-                datos: null
-            }
-        }
-        return { 
-            name: 'Actualizar jugador faltan cambios', 
             result: false, 
-            message: error.response?.data?.error || error.message,
+            message: ex.response?.data?.error || ex.message,  
             datos: null
         }
     }
 }
-export const eliminarJugador = async(token, playerId) => {
-    setToken(token);
-
-    try {
-        const respuesta = await axiosInstance.delete('/players/' + playerId);
-        if(respuesta.status === 200) {
-           return { 
-                name: 'Eliminacion de jugador', 
-                result: true, 
-                message: 'Jugador eliminado => ' + colors.yellow(respuesta.data.result._id),  
-                datos: resp.data.result
-            }
-        }
-        throw new Error("Estado no fue 201");
-    }
-    catch(ex) {
-        return { 
-            name: 'Eliminacion de jugador', 
-            result: false, 
-            message: error.response?.data?.error || error.message,
-            datos: null
-        }
-    }
-}
-
-
-/*export const actualizarJugador = async(token, playerId) => {
+export const actualizarJugadorInexistente = async(token, playerId) => {
     setToken(token);
     const player = {
         _id: playerId,
@@ -333,79 +275,193 @@ export const eliminarJugador = async(token, playerId) => {
         role: "base",
         lesionado: false
     }
-    
+
     try {
-        const respuesta = await axiosInstance.put('/players/' + playerId, player);
-        if (respuesta.status === 201) {
-            showResult(false, 'Actualizacion de jugador', 'id de jugador => ' + colors.yellow(respuesta.data.result._id))
-            return {player: player, respuesta: respuesta.data.result._id};
-        } else {
-            throw new Error("Estado no fue 201");
+        const resp = await axiosInstance.put('/players/69975a85d09119404777415d', player);
+        if(resp.status === 201 && resp.data.result.nickname === player.nickname) {
+            return { 
+                name: 'Actualizar un jugador Inexistente', 
+                result: false, 
+                message: 'Jugador actualizado => ' + colors.yellow(resp.data.result._id),  
+                datos: resp.data.result
+            }
         }
-    } catch (error) {
-        console.error('error: ', error)
-        showResult(true, error.response?.data?.error || error.message)
-        return null;
+        throw new Error('el estado no era 201');
+
+        
+    } catch(ex) {
+        if (ex.response.status === 404) 
+            return { 
+                name: 'Actualizar un jugador Inexistente', 
+                result: true, 
+                message: 'El jugador no existe',  
+                datos: null
+            }
+        else 
+            return { 
+                name: 'Actualizar un jugador Inexistente', 
+                result: false, 
+                message: ex.response?.data?.error || ex.message,  
+                datos: null
+            }
     }
-}*/
-/*export const actualizarJugadorFaltandoCampos = async(token, playerId) => {
+}
+export const actualizarJugadorFaltandoCampos = async(token, playerId) => {
     setToken(token);
-    const player = {}
     try {
-        const respuesta = await axiosInstance.put('/players/' + playerId, player);
+        const respuesta = await axiosInstance.put('/players/' + playerId, {});
 
-        if (respuesta.status === 201) {
-            showResult(true, 'Actualizar jugador faltando datos', 'id de jugador => ' + colors.yellow(respuesta.data.result._id))
-            return {player: player, respuesta: respuesta.data.result._id};
-        } else {
-            throw new Error("Estado no fue 201");
+        if (respuesta.status === 201) 
+            return { 
+                name: 'Actualizar jugador faltan campos', 
+                result: false, 
+                message: 'Jugador actualizado => ' + colors.yellow(respuesta.data.result._id),  
+                datos: resp.data.result
+            }
+        throw new Error("Estado no fue 201");
+
+    } catch(ex) {
+        if (ex.response.status === 400) {
+            return { 
+                name: 'Actualizar jugador faltan campos', 
+                result: true, 
+                message: 'faltan campos obligatorios',
+                datos: null
+            }
         }
-    } catch (error) {
-        console.log(error)
-        if (error.response.status === 500) {
-            showResult(false, 'Actualizar jugador faltando datos', 'jugador no encontrado')
-        } else {
-            showResult(true, 'Actualizar jugador faltando datos', error.response?.data?.error || error.message)
+        return { 
+            name: 'Actualizar jugador faltan campos', 
+            result: false, 
+            message: ex.response?.data?.error || ex.message,
+            datos: null
         }
     }
-}*/
-/*export const eliminarJugadorInexistente = async (token, playerId) => {
-    setToken(token)
+}
+export const actualizarJugadorRolNoAutorizado = async(token, playerId) => {
+    setToken(token);
+    const player = {
+        _id: playerId,
+        nickname: `player_${Date.now()}`,
+        name: "Test Player",
+        country: "ES",
+        birthDate: "1995-05-20",
+        role: "base",
+        lesionado: false
+    }
 
     try {
-       const respuesta = await axiosInstance.delete('/players/69975a85d09119404777415d');
-
-        if(respuesta.status === 200) {
-            showResult(true, 'Eliminacion de jugador', 'id de jugador => ' + colors.yellow(respuesta.data.result._id));
-            return;
+        const resp = await axiosInstance.put('/players/' + playerId, player);
+        if(resp.status === 201 && resp.data.result.nickname === player.nickname) {
+            return { 
+                name: 'Actualizar jugador no autorizado', 
+                result: false, 
+                message: 'Jugador actualizado => ' + colors.yellow(resp.data.result._id),  
+                datos: resp.data.result
+            }
         }
-        throw new Error('El codigo de respuesta no es 200')
+        throw new Error('el estado no era 201');
+
+        
+    } catch(ex) {
+        if (ex.response.status === 401) 
+            return { 
+                name: 'Actualizar jugador no autorizado', 
+                result: true, 
+                message: 'no autorizado',
+                datos: null
+            }
+        return { 
+            name: 'Actualizar jugador no autorizado', 
+            result: false, 
+            message: ex.response?.data?.error || ex.message,
+            datos: null
+        }
+    }
+}
+
+export const eliminarJugador = async(token, playerId) => {
+    setToken(token);
+
+    try {
+        const resp = await axiosInstance.delete('/players/' + playerId);
+        if(resp.status === 200) {
+           return { 
+                name: 'Eliminacion de jugador', 
+                result: true, 
+                message: 'Jugador eliminado => ' + colors.yellow(resp.data.result._id),  
+                datos: resp.data.result
+            }
+        }
+        throw new Error("Estado no fue 201");
     }
     catch(ex) {
-        if(ex.response.status == 404) {
-            showResult(true, 'Eliminacion de jugador', 'juador no encontrado');
-            return;
+        return { 
+            name: 'Eliminacion de jugador', 
+            result: false, 
+            message: ex.response?.data?.error || ex.message,
+            datos: null
         }
-        showResult(false, error.response?.data?.error || error.message);
-        return;
     }
-}*/
-
-/*export const eliminarJugador = async(token, playerId) => {
+}
+export const eliminarJugadorInexistente = async(token, playerId) => {
     setToken(token);
 
     try {
-        const respuesta = await axiosInstance.delete('/players/' + playerId);
-        if(respuesta.status === 200) {
-            showResult(false, 'Eliminacion de jugador', 'id de jugador => ' + colors.yellow(respuesta.data.result._id));
-            return;
+        const resp = await axiosInstance.delete('/players/69975a85d09119404777415d');
+        if(resp.status === 200) {
+           return { 
+                name: 'Eliminacion de jugador no existente', 
+                result: false, 
+                message: 'Jugador eliminado => ' + colors.yellow(resp.data.result._id),  
+                datos: resp.data.result
+            }
         }
-        throw '';
+        throw new Error("Estado no fue 201");
     }
-    catch(error) {
-        showResult(true, error.response?.data?.error || error.message);
-        return;
+    catch(ex) {
+        if(ex.response.status === 404)
+            return { 
+                name: 'Eliminacion de jugador no existente', 
+                result: true, 
+                message: ex.response?.data?.error || ex.message,
+                datos: null
+            }
+        return { 
+            name: 'Eliminacion de jugador no existente', 
+            result: false, 
+            message: ex.response?.data?.error || ex.message,
+            datos: null
+        }
     }
-}*/
+}
+export const eliminarJugadorRolNoAutorizado = async(token, playerId) => {
+    setToken(token);
 
-
+    try {
+        const resp = await axiosInstance.delete('/players/' + playerId);
+        if(resp.status === 200) {
+           return { 
+                name: 'Eliminacion de jugador rol no autorizado', 
+                result: false, 
+                message: 'Jugador eliminado => ' + colors.yellow(resp.data.result._id),  
+                datos: resp.data.result
+            }
+        }
+        throw new Error("Estado no fue 201");
+    }
+    catch(ex) {
+        if(ex.response.status === 401)
+            return { 
+                name: 'Eliminacion de jugador rol no autorizado', 
+                result: true, 
+                message: ex.response?.data?.error || ex.message,
+                datos: null
+            }
+        return { 
+            name: 'Eliminacion de jugador rol no  autorizado', 
+            result: false, 
+            message: ex.response?.data?.error || ex.message,
+            datos: null
+        }
+    }
+}
