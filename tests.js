@@ -143,8 +143,7 @@ showResult(await team.crearEquipoSinNombre(adminToken));
 // Crear un equipo sin fecha de fundacion
 showResult(await team.crearEquipoSinFechaFundacion(adminToken));
 
-// Crear un equipo con roaster
-//TODO showResult(await team.crearEquipoSinFechaFundacion(adminToken)); 
+
 
 // Listar equipos
 showResult(await team.listarEquipos(adminToken))
@@ -164,8 +163,8 @@ showResult(await team.buscarEquipoNoAutorizado(managerToken, respuestaEquipo.dat
 // Tests Rosters
 
 // Crear un roster
-showResult(await team.crearRoster(managerToken, respuestaEquipo.datos._id, datos.datos._id))
-
+const roster = await team.crearRoster(managerToken, respuestaEquipo.datos._id, datos.datos._id)
+showResult(roster)
 // Crear un roster sin jugador
 showResult(await team.crearRosterSinJugador(adminToken, respuestaEquipo.datos._id, datos.datos._id))
 
@@ -193,26 +192,111 @@ showResult(await team.eliminarRosterConEquipoInexistente(managerToken, datos.dat
 // Eliminar un roster no activo (que ya ha sido "eliminado")
 showResult(await team.eliminarRosterInactivo(managerToken, respuestaEquipo.datos._id, datos.datos._id))
 
+// Crear un equipo con roster
+showResult(await team.crearEquipoConRoster(adminToken, roster)); 
 
 // Tests partidos
 
-// Crear un partido
+// Crear un partido con admin
+
+// Crear un partido con manager
+
+// Crear un partido con user
 
 // Crear un partido ya existente
 
 // Crear un partido sin datos
 
-// Crear un partido con stage incorrecto
+// Crear un partido sin fecha
+
+// Crear un partido sin fecha
+
+// Crear un partido con stage Group
+
+// Crear un partido con stage Quarterfinal
+
+// Crear un partido con stage Semifinal
+
+// Crear un partido con stage Final
+
+// Crear un partido con stage Incorrecto
+
+// Crear un partido sin homeTeam
+
+// Crear un partido sin awayTeam
 
 // Crear un partido con el mismo homeTeam y awayTeam
 
-// Crear un partido con equipos inexistentes
+// Crear un partido con homeTeam inexistente
 
-// Crear un partido con puntos negativos
+// Crear un partido con awayTeam inexistente
 
-// Crear un partido con rol usuario
+// Crear un partido con los 2 equipos inexistentes
 
-// Crear un partido con rol master
+// Crear un partido sin puntos para homeTeam
+
+// Crear un partido sin puntos para awayTeam
+
+// Crear un partido con puntos negativos para homeTeam
+
+// Crear un partido con puntos negativos para awayTeam
+
+// Crear un partido con puntos negativos para los 2 Teams
+
+// Crear un partido sin descripcion
+
+// ----
+
+// Listar todos los partidos
+
+// Listar todos los partidos con Rol de Usuario
+
+// Listar todos los partidos con Rol de Admin
+
+// Listar todos los partidos con Rol de Manager
+
+// -----
+
+// Listar un partido con Rol de Usuario
+
+// Listar un partido con Rol de Manager
+
+// Listar un partido con Rol de Admin
+
+// Listar un partido inexistente
+
+// Listar un partido sin id
+
+// -------
+
+
+// Actualizar un partido inexistente
+
+// Actualizar un partido con Rol de Admin
+
+// Actualizar un partido con Rol de Manager
+
+// Actualizar un partido con Rol de Usuario
+
+// --------------
+
+// Actualizar la descripcion de un partido con rol de Admin
+
+// Actualizar la descripcion de un partido con rol de Manager
+
+// Actualizar la descripcion de un partido con rol de Usuario
+
+// Actualizar la descripcion de un partido inexsistente
+
+// --------------
+
+// Eliminar un partido con rol de Admin
+
+// Eliminar un partido con rol de Manager
+
+// Eliminar un partido con rol de Usuario
+
+// Eliminar un partido inexistente
 
 console.log(tests)
 

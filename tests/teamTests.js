@@ -193,22 +193,26 @@ export const crearEquipoSinFechaFundacion = async(token) => {
     }
 
 }
-export const crearEquipoConRoster = async(token, roster) => {
+export const crearEquipoConRoster = async(token, roster, message = 'crear un equipo con un roster') => {
     setToken(token)
+
     const equipo = {
         name: `Equipo${Date.now()}`,
+        foundedAt: Date.now(),
+        roster: roster._id    
     }
+
     try {
         const resp = await axiosInstance.post('/teams', equipo);
         return { 
-            name: 'Crear un equipo sin fecha de fundacion', 
+            name: message, 
             result: true, 
             message: 'Equipo creado correctamente => ' + colors.yellow(resp.data.result._id),  
             datos: resp.data.result
         }
     } catch(ex) {
         return {
-            name: 'Crear un equipo sin fecha de fundacion', 
+            name: message, 
             result: false, 
             message: ex.response?.data?.error || ex.message,  
             datos: null
