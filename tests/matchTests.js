@@ -18,25 +18,26 @@ const setToken = (token) => {
     }
 };
 
-export const crearMatch = (token, homeTeam, awayTeam, message = 'Crear un partido') => {
+export const crearMatch = async(token, homeTeam, awayTeam, message = 'Crear un partido') => {
     setToken(token)
     
     const match = {
-        foundedAt: Date.now(),
+        tournament: 'Ejemplo',
+        date: Date.now(),
         stage: 'Group',
-        homeTeam: homeTeam,
-        awayTeam: awayTeam,
+        homeTeam: homeTeam._id,
+        awayTeam: awayTeam._id,
         homeScore: 10,
         awayScore: 10,
         description: 'Ejemplo'
     }
 
     try{
-        const resp = await axiosInstance.post('/match/', match);
+        const resp = await axiosInstance.post('/matches/', match);
         return {
             name: message, 
             result: true, 
-            message: 'match creado correctamente => ' + colors.yellow(resp.data.result._id),  
+            message: 'match creado correctamente => ' + colors.yellow(resp.data._id),  
             datos: null
         }
     }
@@ -49,11 +50,11 @@ export const crearMatch = (token, homeTeam, awayTeam, message = 'Crear un partid
         }
     }   
 }
-export const crearMatchRolNoAutorizado = (token, homeTeam, awayTeam, message = 'Crear un partido con rol no autorizado') => {
+export const crearMatchRolNoAutorizado = async(token, homeTeam, awayTeam, message = 'Crear un partido con rol no autorizado') => {
     setToken(token)
     
     const match = {
-        foundedAt: Date.now(),
+        date: Date.now(),
         stage: 'Group',
         homeTeam: homeTeam,
         awayTeam: awayTeam,
@@ -63,7 +64,7 @@ export const crearMatchRolNoAutorizado = (token, homeTeam, awayTeam, message = '
     }
 
     try{
-        const resp = await axiosInstance.post('/match/', match);
+        const resp = await axiosInstance.post('/matches/', match);
         return {
             name: message, 
             result: false, 
@@ -87,11 +88,11 @@ export const crearMatchRolNoAutorizado = (token, homeTeam, awayTeam, message = '
         }
     }   
 }
-export const crearMatchYaExistente = (token, match, message = 'Crear un partido que ya existe') => {
+export const crearMatchYaExistente = async(token, match, message = 'Crear un partido que ya existe') => {
     setToken(token)
 
     try{
-        const resp = await axiosInstance.post('/match/', match);
+        const resp = await axiosInstance.post('/matches/', match);
         return {
             name: message, 
             result: false, 
@@ -115,11 +116,11 @@ export const crearMatchYaExistente = (token, match, message = 'Crear un partido 
         }
     }   
 }
-export const crearMatchFaltanDatos = (token, message = 'Crear un partido sin datos') => {
+export const crearMatchFaltanDatos = async(token, message = 'Crear un partido sin datos') => {
     setToken(token)
 
     try{
-        const resp = await axiosInstance.post('/match/', {});
+        const resp = await axiosInstance.post('/matches/', {});
         return {
             name: message, 
             result: false, 
@@ -143,7 +144,7 @@ export const crearMatchFaltanDatos = (token, message = 'Crear un partido sin dat
         }
     }   
 }
-export const crearMatchSinFecha = (token, homeTeam, awayTeam, message = 'Crear un partido sin fecha') => {
+export const crearMatchSinFecha = async(token, homeTeam, awayTeam, message = 'Crear un partido sin fecha') => {
     setToken(token)
     const match = {
         stage: 'Group',
@@ -154,7 +155,7 @@ export const crearMatchSinFecha = (token, homeTeam, awayTeam, message = 'Crear u
         description: 'Ejemplo'
     }
     try{
-        const resp = await axiosInstance.post('/match/', {});
+        const resp = await axiosInstance.post('/matches/', {});
         return {
             name: message, 
             result: false, 
@@ -178,10 +179,10 @@ export const crearMatchSinFecha = (token, homeTeam, awayTeam, message = 'Crear u
         }
     }   
 }
-export const crearMatchSinStage = (token, homeTeam, awayTeam, message = 'Crear un partido sin stage') => {
+export const crearMatchSinStage = async(token, homeTeam, awayTeam, message = 'Crear un partido sin stage') => {
     setToken(token)
     const match = {
-        foundedAt: Date.now(),
+        date: Date.now(),
         homeTeam: homeTeam,
         awayTeam: awayTeam,
         homeScore: 10,
@@ -189,7 +190,7 @@ export const crearMatchSinStage = (token, homeTeam, awayTeam, message = 'Crear u
         description: 'Ejemplo'
     }
     try{
-        const resp = await axiosInstance.post('/match/', {});
+        const resp = await axiosInstance.post('/matches/', {});
         return {
             name: message, 
             result: false, 
@@ -213,10 +214,10 @@ export const crearMatchSinStage = (token, homeTeam, awayTeam, message = 'Crear u
         }
     }   
 }
-export const crearMatchSinHomeTeam = (token, homeTeam, awayTeam, message = 'Crear un partido sin homeTean') => {
+export const crearMatchSinHomeTeam = async(token, homeTeam, awayTeam, message = 'Crear un partido sin homeTean') => {
     setToken(token)
     const match = {
-        foundedAt: Date.now(),
+        date: Date.now(),
         stage: 'Group',
         awayTeam: awayTeam,
         homeScore: 10,
@@ -224,7 +225,7 @@ export const crearMatchSinHomeTeam = (token, homeTeam, awayTeam, message = 'Crea
         description: 'Ejemplo'
     }
     try{
-        const resp = await axiosInstance.post('/match/', {});
+        const resp = await axiosInstance.post('/matches/', {});
         return {
             name: message, 
             result: false, 
@@ -248,10 +249,10 @@ export const crearMatchSinHomeTeam = (token, homeTeam, awayTeam, message = 'Crea
         }
     }   
 }
-export const crearMatchSinAwayTeam = (token, homeTeam, awayTeam, message = 'Crear un partido sin awayTeam') => {
+export const crearMatchSinAwayTeam = async(token, homeTeam, awayTeam, message = 'Crear un partido sin awayTeam') => {
     setToken(token)
     const match = {
-        foundedAt: Date.now(),
+        date: Date.now(),
         stage: 'Group',
         homeTeam: homeTeam,
         homeScore: 10,
@@ -259,7 +260,7 @@ export const crearMatchSinAwayTeam = (token, homeTeam, awayTeam, message = 'Crea
         description: 'Ejemplo'
     }
     try{
-        const resp = await axiosInstance.post('/match/', {});
+        const resp = await axiosInstance.post('/matches/', {});
         return {
             name: message, 
             result: false, 
@@ -283,17 +284,17 @@ export const crearMatchSinAwayTeam = (token, homeTeam, awayTeam, message = 'Crea
         }
     }   
 }
-export const crearMatchSinAwayTeamNiHomeTeam = (token, homeTeam, awayTeam, message = 'Crear un partido sin stage') => {
+export const crearMatchSinAwayTeamNiHomeTeam = async(token, homeTeam, awayTeam, message = 'Crear un partido sin stage') => {
     setToken(token)
     const match = {
-        foundedAt: Date.now(),
+        date: Date.now(),
         stage: 'Group',
         homeScore: 10,
         awayScore: 10,
         description: 'Ejemplo'
     }
     try{
-        const resp = await axiosInstance.post('/match/', {});
+        const resp = await axiosInstance.post('/matches/', {});
         return {
             name: message, 
             result: false, 
@@ -317,10 +318,10 @@ export const crearMatchSinAwayTeamNiHomeTeam = (token, homeTeam, awayTeam, messa
         }
     }   
 }
-export const crearMatchSinPuntosHomeTeam = (token, homeTeam, awayTeam, message = 'Crear un partido sin stage') => {
+export const crearMatchSinPuntosHomeTeam = async(token, homeTeam, awayTeam, message = 'Crear un partido sin stage') => {
     setToken(token)
     const match = {
-        foundedAt: Date.now(),
+        date: Date.now(),
         stage: 'Group',
         homeTeam: homeTeam,
         awayTeam: awayTeam,
@@ -328,7 +329,7 @@ export const crearMatchSinPuntosHomeTeam = (token, homeTeam, awayTeam, message =
         description: 'Ejemplo'
     }
     try{
-        const resp = await axiosInstance.post('/match/', {});
+        const resp = await axiosInstance.post('/matches/', {});
         return {
             name: message, 
             result: false, 
@@ -352,10 +353,10 @@ export const crearMatchSinPuntosHomeTeam = (token, homeTeam, awayTeam, message =
         }
     }   
 }
-export const crearMatchSinPuntosAwayTeam = (token, homeTeam, awayTeam, message = 'Crear un partido sin stage') => {
+export const crearMatchSinPuntosAwayTeam = async(token, homeTeam, awayTeam, message = 'Crear un partido sin stage') => {
     setToken(token)
     const match = {
-        foundedAt: Date.now(),
+        date: Date.now(),
         stage: 'Group',
         homeTeam: homeTeam,
         awayTeam: awayTeam,
@@ -363,7 +364,7 @@ export const crearMatchSinPuntosAwayTeam = (token, homeTeam, awayTeam, message =
         description: 'Ejemplo'
     }
     try{
-        const resp = await axiosInstance.post('/match/', {});
+        const resp = await axiosInstance.post('/matches/', {});
         return {
             name: message, 
             result: false, 
@@ -387,17 +388,17 @@ export const crearMatchSinPuntosAwayTeam = (token, homeTeam, awayTeam, message =
         }
     }   
 }
-export const crearMatchSinPuntos = (token, homeTeam, awayTeam, message = 'Crear un partido sin stage') => {
+export const crearMatchSinPuntos = async(token, homeTeam, awayTeam, message = 'Crear un partido sin stage') => {
     setToken(token)
     const match = {
-        foundedAt: Date.now(),
+        date: Date.now(),
         stage: 'Group',
         homeTeam: homeTeam,
         awayTeam: awayTeam,
         description: 'Ejemplo'
     }
     try{
-        const resp = await axiosInstance.post('/match/', {});
+        const resp = await axiosInstance.post('/matches/', {});
         return {
             name: message, 
             result: false, 
@@ -421,54 +422,18 @@ export const crearMatchSinPuntos = (token, homeTeam, awayTeam, message = 'Crear 
         }
     }   
 }
-export const crearMatchSinDescripcion = (token, homeTeam, awayTeam, message = 'Crear un partido sin stage') => {
+export const crearMatchSinDescripcion = async(token, homeTeam, awayTeam, message = 'Crear un partido sin stage') => {
     setToken(token)
     const match = {
-        foundedAt: Date.now(),
-        stage: 'Group',
-        homeTeam: homeTeam,
-        awayTeam: awayTeam,
-        homeScore: 10,
-        awayScore: 10,
-    }
-    try{
-        const resp = await axiosInstance.post('/match/', {});
-        return {
-            name: message, 
-            result: false, 
-            message: 'match creado correctamente => ' + colors.yellow(resp.data.result._id),  
-            datos: null
-        }
-    }
-    catch(ex) {
-        if(ex.response.status == 400)
-            return {
-                name: message, 
-                result: true, 
-                message: ex.response?.data?.error || ex.message,  
-                datos: null
-            }
-        return {
-            name: message, 
-            result: false, 
-            message: ex.response?.data?.error || ex.message,  
-            datos: null
-        }
-    }   
-}
-export const crearMatchSinStage = (token, homeTeam, awayTeam, message = 'Crear un partido sin stage') => {
-    setToken(token)
-    const match = {
-        foundedAt: Date.now(),
+        date: Date.now(),
         stage: 'Group',
         homeTeam: homeTeam,
         awayTeam: awayTeam,
         homeScore: 10,
         awayScore: 10,
-        description: 'Ejemplo'
     }
     try{
-        const resp = await axiosInstance.post('/match/', {});
+        const resp = await axiosInstance.post('/matches/', {});
         return {
             name: message, 
             result: false, 
@@ -492,3 +457,39 @@ export const crearMatchSinStage = (token, homeTeam, awayTeam, message = 'Crear u
         }
     }   
 }
+/*export const crearMatchSinStage = async(token, homeTeam, awayTeam, message = 'Crear un partido sin stage') => {
+    setToken(token)
+    const match = {
+        date: Date.now(),
+        stage: 'Group',
+        homeTeam: homeTeam,
+        awayTeam: awayTeam,
+        homeScore: 10,
+        awayScore: 10,
+        description: 'Ejemplo'
+    }
+    try{
+        const resp = await axiosInstance.post('/matches/', {});
+        return {
+            name: message, 
+            result: false, 
+            message: 'match creado correctamente => ' + colors.yellow(resp.data.result._id),  
+            datos: null
+        }
+    }
+    catch(ex) {
+        if(ex.response.status == 400)
+            return {
+                name: message, 
+                result: true, 
+                message: ex.response?.data?.error || ex.message,  
+                datos: null
+            }
+        return {
+            name: message, 
+            result: false, 
+            message: ex.response?.data?.error || ex.message,  
+            datos: null
+        }
+    }   
+}*/
