@@ -154,6 +154,193 @@ export const crearJugadorRolUsuario = async(token) => {
             }
     }
 }
+export const crearJugadorSinNombre = async(token, message = 'Crear jugador sin nombre') => {
+    setToken(token)
+    
+    const player = {
+        nickname: `player_${Date.now()}`,
+        country: "ES",
+        birthDate: "1995-05-20",
+        role: "base",
+        lesionado: false
+    }
+    
+    try {
+        const resp = await axiosInstance.post('/players', player);
+        return { 
+            name: message, 
+            result: false, 
+            message: 'jugador creado correctamente',  
+            datos: resp.data.result
+        }
+
+    }
+    catch(ex) {
+        if(ex.response.status === 400)
+            return { 
+                name: message, 
+                result: true, 
+                message: ex.response?.data?.error || ex.message,  
+                datos: null
+            }
+        return { 
+            name: message, 
+            result: false, 
+            message: ex.response?.data?.error || ex.message,  
+            datos: null
+        }
+    }
+}
+export const crearJugadorSinNickName = async(token, message = 'Crear jugador sin nickname') => {
+    setToken(token)
+    
+    const player = {
+        name: "Test Player",
+        country: "ES",
+        birthDate: "1995-05-20",
+        role: "base",
+        lesionado: false
+    }
+    
+    try {
+        const resp = await axiosInstance.post('/players', player);
+        return { 
+            name: message, 
+            result: false, 
+            message: 'jugador creado correctamente',  
+            datos: resp.data.result
+        }
+
+    }
+    catch(ex) {
+        if(ex.response.status === 400)
+            return { 
+                name: message, 
+                result: true, 
+                message: ex.response?.data?.error || ex.message,  
+                datos: null
+            }
+        return { 
+            name: message, 
+            result: false, 
+            message: ex.response?.data?.error || ex.message,  
+            datos: null
+        }
+    }
+}
+export const crearJugadorSinCountry = async(token, message = 'Crear jugador sin country') => {
+    setToken(token)
+    
+    const player = {
+        nickname: `player_${Date.now()}`,
+        name: "Test Player",
+        birthDate: "1995-05-20",
+        role: "base",
+        lesionado: false
+    }
+    
+    try {
+        const resp = await axiosInstance.post('/players', player);
+        return { 
+            name: message, 
+            result: false, 
+            message: 'jugador creado correctamente',  
+            datos: resp.data.result
+        }
+
+    }
+    catch(ex) {
+        if(ex.response.status === 400)
+            return { 
+                name: message, 
+                result: true, 
+                message: ex.response?.data?.error || ex.message,  
+                datos: null
+            }
+        return { 
+            name: message, 
+            result: false, 
+            message: ex.response?.data?.error || ex.message,  
+            datos: null
+        }
+    }
+}
+export const crearJugadorSinBirthday = async(token, message = 'Crear jugador sin birthdate') => {
+    setToken(token)
+    
+    const player = {
+        nickname: `player_${Date.now()}`,
+        name: "Test Player",
+        country: "ES",
+        role: "base",
+        lesionado: false
+    }
+    
+    try {
+        const resp = await axiosInstance.post('/players', player);
+        return { 
+            name: message, 
+            result: false, 
+            message: 'jugador creado correctamente',  
+            datos: resp.data.result
+        }
+
+    }
+    catch(ex) {
+        if(ex.response.status === 400)
+            return { 
+                name: message, 
+                result: true, 
+                message: ex.response?.data?.error || ex.message,  
+                datos: null
+            }
+        return { 
+            name: message, 
+            result: false, 
+            message: ex.response?.data?.error || ex.message,  
+            datos: null
+        }
+    }
+}
+export const crearJugadorSinRol = async(token, message = 'Crear jugador sin rol') => {
+    setToken(token)
+    
+    const player = {
+        nickname: `player_${Date.now()}`,
+        name: "Test Player",
+        country: "ES",
+        birthDate: "1995-05-20",
+        lesionado: false
+    }
+    
+    try {
+        const resp = await axiosInstance.post('/players', player);
+        return { 
+            name: message, 
+            result: false, 
+            message: 'jugador creado correctamente',  
+            datos: resp.data.result
+        }
+
+    }
+    catch(ex) {
+        if(ex.response.status === 400)
+            return { 
+                name: message, 
+                result: true, 
+                message: ex.response?.data?.error || ex.message,  
+                datos: null
+            }
+        return { 
+            name: message, 
+            result: false, 
+            message: ex.response?.data?.error || ex.message,  
+            datos: null
+        }
+    }
+}
+
+
 
 export const listarJugadores = async(token) => {
     setToken(token)

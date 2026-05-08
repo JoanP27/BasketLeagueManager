@@ -36,6 +36,12 @@ router.put('/:id/description', async (req,res) => {
         const { description } = req.body;
         const match = await Match.findById(matchId);
         
+        if(!description && description != '') {
+            const error = new Error();
+            error.name = "ValidationError"
+            throw error; 
+        }
+
         if(!match) {
             const error = new Error();
             error.name = "MatchNotFound"
@@ -52,6 +58,25 @@ router.put('/:id/description', async (req,res) => {
         res.status(error.statusCode).send({error: error.message})
     }
 });
+
+router.delete('/:id',protegerRuta(manager), async (req, res) => {
+    try {
+        const id = req.params.id;
+        const deletedMatch = await Match.findByIdAndDelete(id);
+
+        if(!deletedMatch) {
+            const err = new Error();
+            err.name = "MatchNotFound"
+            throw err;
+        }
+
+        res.status(200).send(deletedMatch);
+    } catch (ex) {
+        const error = getErrorMessage(ex);
+        res.status(error.statusCode).send({error: error.message})
+    }
+});
+
 
 router.delete('/:id/description', async (req,res) => {
     try{
@@ -125,23 +150,6 @@ router.post('/',protegerRuta(manager), async (req, res) => {
     }
 });
 
-router.delete('/:id',protegerRuta(manager), async (req, res) => {
-    try {
-        const id = req.params.id;
-        const deletedMatch = await Match.findByIdAndDelete(id);
-
-        if(!deletedMatch) {
-            const err = new Error();
-            err.name = "MatchNotFound"
-            throw err;
-        }
-
-        res.status(200).send(deletedMatch);
-    } catch (ex) {
-        const error = getErrorMessage(ex);
-        res.status(error.statusCode).send({error: error.message})
-    }
-});
 
  
 

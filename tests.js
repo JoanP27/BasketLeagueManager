@@ -90,6 +90,21 @@ showResult(await player.crearJugadorDatosIncorrectos(adminToken))
 // Insertar jugador con rol no authorizado
 showResult(await player.crearJugadorRolUsuario(userToken))
 
+// Insertar un jugador sin nickname
+showResult(await player.crearJugadorSinNickName(adminToken));
+
+// Insertar un jugador sin nombre
+showResult(await player.crearJugadorSinNombre(adminToken));
+
+// Insertar un jugador sin nombre
+showResult(await player.crearJugadorSinCountry(adminToken));
+
+// Insertar un jugador sin nombre
+showResult(await player.crearJugadorSinBirthday(adminToken));
+
+// Insertar un jugador sin nombre
+showResult(await player.crearJugadorSinRol(adminToken));
+
 // Lista de jugadores
 showResult(await player.listarJugadores(userToken))
 
@@ -205,6 +220,9 @@ showResult(await team.crearEquipoConRoster(adminToken, roster));
 const matchDatos = await match.crearMatch(adminToken, respuestaEquipo.datos, equipo2.datos)
 showResult(matchDatos)
 
+const matchDatos2 =  await match.crearMatch(adminToken, respuestaEquipo.datos, equipo2.datos)
+const matchDatos3 =  await match.crearMatch(adminToken, respuestaEquipo.datos, equipo2.datos)
+
 // Crear un partido con manager
 showResult(await match.crearMatch(managerToken, respuestaEquipo.datos, equipo2.datos, 'Crear un partido con Rol de manager'))
 
@@ -273,9 +291,13 @@ showResult(await match.crearMatchSinPuntosAwayTeam(adminToken, respuestaEquipo.d
 
 // Crear un partido con puntos negativos para homeTeam
 
+showResult(await match.crearMatchConPuntosDeHomeTeamNegativos(managerToken, respuestaEquipo.datos, equipo2.datos))
+
 // Crear un partido con puntos negativos para awayTeam
+showResult(await match.crearMatchConPuntosDeAwayTeamNegativos(managerToken, respuestaEquipo.datos, equipo2.datos))
 
 // Crear un partido con puntos negativos para los 2 Teams
+showResult(await match.crearMatchConPuntosNegativos(managerToken, respuestaEquipo.datos, equipo2.datos))
 
 // Crear un partido sin descripcion
 showResult(await match.crearMatchSinDescripcion(adminToken, respuestaEquipo.datos, equipo2.datos))
@@ -283,55 +305,72 @@ showResult(await match.crearMatchSinDescripcion(adminToken, respuestaEquipo.dato
 // ----
 
 // Listar todos los partidos
+showResult(await match.listarMatches(adminToken))
 
 // Listar todos los partidos con Rol de Usuario
-
-// Listar todos los partidos con Rol de Admin
+showResult(await match.listarMatches(userToken, 'Listar partidos con rol de usuario'))
 
 // Listar todos los partidos con Rol de Manager
+showResult(await match.listarMatches(managerToken, 'Listar partidos con rol de manager'))
 
 // -----
 
 // Listar un partido con Rol de Usuario
+showResult(await match.listarUnaMatch(userToken, matchDatos.datos._id, 'Listar un partido con rol de usuario'))
 
 // Listar un partido con Rol de Manager
+showResult(await match.listarUnaMatch(managerToken, matchDatos.datos._id, 'Listar un partido con rol de manager'))
 
 // Listar un partido con Rol de Admin
+showResult(await match.listarUnaMatch(adminToken, matchDatos.datos._id, 'LIstar un partido con rol de admin'))
 
 // Listar un partido inexistente
-
-// Listar un partido sin id
+showResult(await match.listarUnMatchInexistente(adminToken))
 
 // -------
 
-
-// Actualizar un partido inexistente
-
-// Actualizar un partido con Rol de Admin
+// Actualizar la descripcion de un partido con Rol de Admin
+showResult(await match.actualizarDescripcionMatch(adminToken, matchDatos.datos, 'Actualizar las descripcion de un partido con rol de admin'))
 
 // Actualizar un partido con Rol de Manager
+showResult(await match.actualizarDescripcionMatch(managerToken, matchDatos.datos, 'Actualizar las descripcion de un partido con rol de manager'))
 
 // Actualizar un partido con Rol de Usuario
-
-// --------------
-
-// Actualizar la descripcion de un partido con rol de Admin
-
-// Actualizar la descripcion de un partido con rol de Manager
-
-// Actualizar la descripcion de un partido con rol de Usuario
+showResult(await match.actualizarDescripcionMatch(userToken, matchDatos.datos, 'Actualizar las descripcion de un partido con rol de admin'))
 
 // Actualizar la descripcion de un partido inexsistente
+showResult(await match.actualizarDescripcionMatchInexistente(userToken, matchDatos.datos))
+
+// Actualizar la descripcion de un partido faltando datos
+showResult(await match.actualizarDescripcionMatchSinDatos(userToken, matchDatos.datos))
+
 
 // --------------
 
 // Eliminar un partido con rol de Admin
+showResult(await match.eliminarMatch(adminToken, matchDatos.datos, 'Eliminar partido con rol de admin'))
+
 
 // Eliminar un partido con rol de Manager
+showResult(await match.eliminarMatch(managerToken, matchDatos2.datos, 'Eliminar partido con rol de Manager'))
+
 
 // Eliminar un partido con rol de Usuario
+showResult(await match.eliminarMatchRolNoAutorizado(userToken, matchDatos3.datos, 'Eliminar partido con rol de Usuario'))
+
 
 // Eliminar un partido inexistente
+showResult(await match.eliminarMatchInexistente(adminToken, matchDatos3.datos))
+
+// Eliminar la descripcion de un partido con rol de admin
+showResult(await match.eliminarDescripcionMatch(adminToken, matchDatos3.datos, 'Eliminar descripcion de un partido con rol de admin'))
+
+
+// Eliminar la descripcion de un partido con rol de manager
+showResult(await match.eliminarDescripcionMatch(managerToken, matchDatos3.datos, 'Eliminar descripcion de un partido con rol de manager'))
+
+// Eliminar la descripcion de un partido con rol de usuario
+showResult(await match.eliminarDescripcionMatch(userToken, matchDatos3.datos, 'Eliminar descripcion de un partido con rol de usuario'))
 
 console.log(tests)
 
