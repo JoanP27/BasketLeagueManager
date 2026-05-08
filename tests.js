@@ -204,34 +204,40 @@ showResult(await team.crearEquipoConRoster(adminToken, roster));
 // Crear un partido con admin
 const matchDatos = await match.crearMatch(adminToken, respuestaEquipo.datos, equipo2.datos)
 showResult(matchDatos)
-/*
+
 // Crear un partido con manager
 showResult(await match.crearMatch(managerToken, respuestaEquipo.datos, equipo2.datos, 'Crear un partido con Rol de manager'))
 
 // Crear un partido con user
-showResult(await match.crearMatch(userToken, respuestaEquipo.datos, equipo2.datos, 'Crear un partido con Rol de usuario'))
+showResult(await match.crearMatchRolNoAutorizado(userToken, respuestaEquipo.datos, equipo2.datos, 'Crear un partido con Rol de usuario'))
 
 // Crear un partido ya existente
-showResult(await match.crearMatchYaExistente(userToken))
+showResult(await match.crearMatchYaExistente(adminToken, matchDatos.datos))
 
 // Crear un partido sin datos
-showResult(await match.crearMatchFaltanDatos(userToken))
+showResult(await match.crearMatchFaltanDatos(adminToken))
 
 // Crear un partido sin fecha
-showResult(await match.crearMatchSinFecha(adminToken, respuestaEquipo.datos, equipo2.datos,))
+showResult(await match.crearMatchSinFecha(adminToken, respuestaEquipo.datos, equipo2.datos))
 
 // Crear un partido sin stage
-showResult(await match.crearMatchSinStage(adminToken, respuestaEquipo.datos, equipo2.datos,))
+showResult(await match.crearMatchSinStage(adminToken, respuestaEquipo.datos, equipo2.datos))
 
 // Crear un partido con stage Group
+showResult(await match.crearMatchConStageGroup(adminToken, respuestaEquipo.datos, equipo2.datos,))
 
 // Crear un partido con stage Quarterfinal
+showResult(await match.crearMatchConStageQuarterfinal(adminToken, respuestaEquipo.datos, equipo2.datos))
 
 // Crear un partido con stage Semifinal
+showResult(await match.crearMatchConStageSemifinal(adminToken, respuestaEquipo.datos, equipo2.datos))
 
 // Crear un partido con stage Final
+showResult(await match.crearMatchConStageFinal(adminToken, respuestaEquipo.datos, equipo2.datos))
+
 
 // Crear un partido con stage Incorrecto
+showResult(await match.crearMatchConStageIncorrecto(adminToken, respuestaEquipo.datos, equipo2.datos))
 
 // Crear un partido sin homeTeam
 showResult(await match.crearMatchSinHomeTeam(adminToken, respuestaEquipo.datos, equipo2.datos,))
@@ -243,12 +249,18 @@ showResult(await match.crearMatchSinAwayTeam(adminToken, respuestaEquipo.datos, 
 showResult(await match.crearMatchSinAwayTeamNiHomeTeam(adminToken, respuestaEquipo.datos, equipo2.datos,))
 
 // Crear un partido con el mismo homeTeam y awayTeam
+showResult(await match.crearMatchMismoHomeTeamYAwayTean(adminToken, respuestaEquipo.datos))
 
 // Crear un partido con homeTeam inexistente
+showResult(await match.crearMatchConHomeTeamInexistente(adminToken, respuestaEquipo.datos))
+
 
 // Crear un partido con awayTeam inexistente
+showResult(await match.crearMatchConAwayTeamInexistente(adminToken, respuestaEquipo.datos))
 
 // Crear un partido con los 2 equipos inexistentes
+showResult(await match.crearMatchConEquiposInexistentes(adminToken))
+
 
 // Crear un partido sin puntos para homeTeam
 showResult(await match.crearMatchSinPuntosHomeTeam(adminToken, respuestaEquipo.datos, equipo2.datos,))
@@ -266,7 +278,7 @@ showResult(await match.crearMatchSinPuntosAwayTeam(adminToken, respuestaEquipo.d
 // Crear un partido con puntos negativos para los 2 Teams
 
 // Crear un partido sin descripcion
-showResult(await match.crearMatchSinDescripcion(adminToken, matrespuestaEquipo.datos, equipo2.datos,chDatos))
+showResult(await match.crearMatchSinDescripcion(adminToken, respuestaEquipo.datos, equipo2.datos))
 
 // ----
 
@@ -320,7 +332,7 @@ showResult(await match.crearMatchSinDescripcion(adminToken, matrespuestaEquipo.d
 // Eliminar un partido con rol de Usuario
 
 // Eliminar un partido inexistente
-*/
+
 console.log(tests)
 
 

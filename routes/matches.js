@@ -99,6 +99,8 @@ router.post('/',protegerRuta(manager), async (req, res) => {
     try {
         const match = new Match({...req.body});
 
+        await Match.validate(match)
+
         if(match.awayTeam.equals(match.homeTeam)) {
             const err = new Error();
             err.name = "SameTeams"
